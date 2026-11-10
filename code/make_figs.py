@@ -15,13 +15,16 @@ FIG = os.path.join(HERE, "..", "paper", "figs")
 os.makedirs(FIG, exist_ok=True)
 L = lambda f: json.load(open(os.path.join(RES, f)))
 
-# Okabe-Ito colour-blind-safe palette
+# Okabe-Ito colour-blind-safe palette; RateQ always uses the highlight blue (HL), baselines never do
+HL = "#0072B2"
 C = {"B1": "#000000", "B4": "#E69F00", "RQ": "#0072B2", "RQ+": "#009E73", "DB": "#CC79A7", "B5": "#D55E00",
      "svc": "#E69F00", "full": "#000000", "pred": "#56B4E9", "adapt": "#0072B2", "oracle": "#009E73", "USPS": "#CC79A7"}
 MK = {"B1": "o", "B4": "s", "RQ": "^", "RQ+": "D", "DB": "v", "B5": "x"}
-plt.rcParams.update({"font.size": 7.5, "axes.labelsize": 7.5, "legend.fontsize": 6.8, "xtick.labelsize": 7,
-                     "ytick.labelsize": 7, "pdf.fonttype": 42, "ps.fonttype": 42, "axes.linewidth": 0.6,
-                     "lines.linewidth": 1.2, "lines.markersize": 3.5})
+plt.rcParams.update({"font.family": "serif", "font.serif": ["Times New Roman", "Times", "STIXGeneral"],
+                     "mathtext.fontset": "stix",  # Times-like text and math, as in the IEEEtran body
+                     "font.size": 8, "axes.labelsize": 8, "legend.fontsize": 7.5, "xtick.labelsize": 7.5,
+                     "ytick.labelsize": 7.5, "pdf.fonttype": 42, "ps.fonttype": 42, "axes.linewidth": 0.6,
+                     "lines.linewidth": 1.2, "lines.markersize": 3.5, "hatch.linewidth": 0.6})
 W = 3.45
 INST = [("PUB2", 19), ("PUB2x60", 60), ("PUB2x240", 240), ("PUB2x1000", 1000)]
 WLN = {"olist": "(a) olist", "furn": "(b) furniture"}
@@ -36,7 +39,7 @@ def finish(fig, axs, name, handles, labels, ncol):
     fig.legend(handles, labels, loc="upper center", ncol=ncol, frameon=False, bbox_to_anchor=(0.5, 1.02),
                handlelength=1.6, columnspacing=1.0)
     fig.tight_layout(rect=(0, 0, 1, 0.78), pad=0.3, w_pad=0.6)
-    fig.savefig(os.path.join(FIG, name), bbox_inches="tight", pad_inches=0.01)
+    fig.savefig(os.path.join(FIG, name), bbox_inches="tight", pad_inches=0.03)
     plt.close(fig)
 
 
@@ -78,27 +81,29 @@ finish(fig, axs, "q2_batch.pdf", h, [lab[x] for x in l], 3)
 
 # ---------------------------------------------------------------- Q3 maintenance per edit type
 E5 = L("pilot_E5_pub2.json")
-fig, ax = plt.subplots(figsize=(W, 1.6))
+# small multiples, one panel per edit type; colour = method (RateQ highlight blue, service-level orange, full recomputation grey)
+fig, axs = plt.subplots(1, 3, figsize=(W, 1.45), sharey=True)
 x = np.arange(len(INST))
-bars = [("cell", "ours_s", "cell edit (ours)", "#0072B2", ""), ("cell", "service_level_s", "cell edit (service-level)", "#56B4E9", ""),
-        ("band", "ours_s", "band edit (ours)", "#009E73", ""), ("band", "service_level_s", "band edit (service-level)", "#8FD9C1", ""),
-        ("fuel", "ours_s", "fuel edit (ours)", "#E69F00", ""), ("full", None, "full recomputation", "#000000", "")]
-w = 0.13
-for j, (et, k, lab, col, hatch) in enumerate(bars):
-    if et == "full":
-        y = [E5[i]["full_recompute_s"] for i, _ in INST]
-    else:
-        y = [E5[i]["edits"][et][k] for i, _ in INST]
-    ax.bar(x + (j - 2.5) * w, np.array(y) * 1e3, w, color=col, label=lab, edgecolor="none")
-ax.set_yscale("log")
-ax.set_xticks(x); ax.set_xticklabels([f"$n$={n}" for _, n in INST])
-ax.set_ylabel("time per edit (ms)")
-ax.grid(True, axis="y", which="major", lw=0.3, alpha=0.5)
-ax.set_axisbelow(True)
-h, l = ax.get_legend_handles_labels()
-fig.legend(h, l, loc="upper center", ncol=3, frameon=False, bbox_to_anchor=(0.5, 1.04), handlelength=1.2, columnspacing=0.8)
-fig.tight_layout(rect=(0, 0, 1, 0.8), pad=0.3)
-fig.savefig(os.path.join(FIG, "q3_maint.pdf"), bbox_inches="tight", pad_inches=0.01)
+full = np.array([E5[i]["full_recompute_s"] for i, _ in INST]) * 1e3
+for ax, (et, title) in zip(axs, (("cell", "(a) cell edit"), ("band", "(b) band edit"), ("fuel", "(c) fuel edit"))):
+    ax.plot(x, full, color="#7F7F7F", marker="^", ls="--", label="full recomputation")
+    svc = [E5[i]["edits"][et].get("service_level_s") for i, _ in INST]
+    if all(v is not None for v in svc):
+        ax.plot(x, np.array(svc) * 1e3, color=C["svc"], marker="s", label="service-level")
+    ax.plot(x, np.array([E5[i]["edits"][et]["ours_s"] for i, _ in INST]) * 1e3, color=HL, marker="o", lw=1.6, label="RateQ")
+    ax.set_yscale("log")
+    ax.set_xticks(x); ax.set_xticklabels([str(n) for _, n in INST])
+    ax.set_xlim(-0.4, len(INST) - 0.6)
+    ax.set_title(title, fontsize=7.5, pad=2)
+    ax.grid(True, axis="y", which="major", lw=0.3, alpha=0.5)
+axs[0].set_ylabel("time per edit (ms)")
+axs[1].set_xlabel("services $n$")
+h, l = axs[0].get_legend_handles_labels()
+order = [l.index("RateQ"), l.index("service-level"), l.index("full recomputation")]
+fig.legend([h[k] for k in order], [l[k] for k in order], loc="upper center", ncol=3, frameon=False, bbox_to_anchor=(0.5, 1.02),
+           handlelength=1.8, columnspacing=1.0)
+fig.tight_layout(rect=(0, 0, 1, 0.88), pad=0.3, w_pad=0.4)
+fig.savefig(os.path.join(FIG, "q3_maint.pdf"), bbox_inches="tight", pad_inches=0.03)
 plt.close(fig)
 
 # ---------------------------------------------------------------- enterprise: per-event time relative to the oracle
@@ -108,7 +113,7 @@ orc = np.array([min(e["pred_s"], e["service_level_s"]) for e in ev])
 fig, ax = plt.subplots(figsize=(W, 1.45))
 k = np.arange(1, len(ev) + 1)
 for lab, key, col, ls in (("service-level", "service_level_s", C["svc"], "-"), ("predicate-level", "pred_s", C["pred"], "--"),
-                          ("adaptive ($\\theta=0.3$)", "adaptive_s", C["adapt"], "-")):
+                          ("adaptive ($\\theta=0.3$, default)", "adaptive_s", HL, "-")):
     r = np.sort(np.array([e[key] for e in ev]) / orc)
     ax.step(k, r, where="post", color=col, ls=ls, label=lab, lw=1.1)
 ax.set_xlabel("logged rule changes, sorted by ratio")
@@ -118,7 +123,7 @@ ax.grid(True, lw=0.3, alpha=0.5)
 ax.legend(loc="lower center", bbox_to_anchor=(0.5, 1.0), frameon=False, ncol=3, handlelength=1.6, columnspacing=0.8,
           borderaxespad=0.2)
 fig.tight_layout(pad=0.3)
-fig.savefig(os.path.join(FIG, "erp_replay.pdf"), bbox_inches="tight", pad_inches=0.01)
+fig.savefig(os.path.join(FIG, "erp_replay.pdf"), bbox_inches="tight", pad_inches=0.03)
 plt.close(fig)
 
 # ---------------------------------------------------------------- motivating example: exact cost vs weight, official 2026 data
@@ -127,8 +132,8 @@ from rateq.model import Parcels, eval_service, INF
 
 inst = build_pub2()
 key0 = int(parcels_olist(50, seed=3).key[0])  # a real destination ZIP from origin index stored in the key
-names = {"UPS_Ground": ("UPS Ground", "#0072B2", "-"), "FedEx_Ground": ("FedEx Ground", "#D55E00", "--"),
-         "USPS_GA_Commercial": ("USPS Ground Adv. (Comm.)", "#CC79A7", "-."), "USPS_PM_Commercial": ("USPS Priority (Comm.)", "#009E73", ":")}
+names = {"UPS_Ground": ("UPS Ground", "#E69F00", "-"), "FedEx_Ground": ("FedEx Ground", "#D55E00", "--"),
+         "USPS_GA_Commercial": ("USPS Ground Adv.", "#CC79A7", "-."), "USPS_PM_Commercial": ("USPS Priority", "#009E73", ":")}
 ws = np.round(np.arange(1, 70.01, 0.25), 2)
 N = len(ws)
 fig, ax = plt.subplots(figsize=(W, 1.6))
@@ -146,14 +151,15 @@ for s in inst.services:
         ax.plot(ws, c / 100.0, color=col, ls=ls, label=lab, lw=1.1)
 allc = np.vstack([costs[k] for k in names])
 best = np.nanmin(allc, axis=0)
+ax.plot(ws, best, color=HL, lw=3.2, alpha=0.35, solid_capstyle="butt", label="cheapest = RateQ", zorder=0)
 ax.set_xlabel("actual weight (lb) of a 49$\\times$14$\\times$8 in carton")
 ax.set_ylabel("exact charge (USD)")
 ax.set_xlim(1, 70)
 ax.grid(True, lw=0.3, alpha=0.5)
-ax.legend(loc="lower center", bbox_to_anchor=(0.5, 1.0), frameon=False, ncol=2, handlelength=2.0, columnspacing=0.8,
+ax.legend(loc="lower center", bbox_to_anchor=(0.5, 1.0), frameon=False, ncol=3, handlelength=1.8, columnspacing=0.7,
           borderaxespad=0.2)
 fig.tight_layout(pad=0.3)
-fig.savefig(os.path.join(FIG, "example.pdf"), bbox_inches="tight", pad_inches=0.01)
+fig.savefig(os.path.join(FIG, "example.pdf"), bbox_inches="tight", pad_inches=0.03)
 plt.close(fig)
 # facts for the text
 winner = [list(names)[int(np.nanargmin(allc[:, i]))] if np.isfinite(best[i]) else None for i in range(N)]
