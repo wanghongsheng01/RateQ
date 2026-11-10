@@ -4,7 +4,7 @@
 #   scripts/reproduce.sh setup      create .venv from requirements.txt and build cpp/rq          (~2 min)
 #   scripts/reproduce.sh check      regenerate numbers, tables and figures from the shipped results
 #                                   and compare with paper/ (no experiment is rerun)            (~1 min)
-#   scripts/reproduce.sh smoke      exactness smoke test of the Python engine on all generators   (~2 min)
+#   scripts/reproduce.sh smoke      exactness smoke test of the Python engine on all generators   (~1 min)
 #   scripts/reproduce.sh cpp-smoke  export PUB2 inputs and verify the C++ engine against Python  (~2 min)
 #   scripts/reproduce.sh pilot      Python E1-E5 on PUB2, PUB2x60, PUB2x240, PUB2x1000 (pilot_E*_pub2.json)
 #   scripts/reproduce.sh synthetic  Python E1, E2 (tuned SQL baseline), E3 on SYN200 and the other

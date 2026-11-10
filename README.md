@@ -116,8 +116,8 @@ used an Intel Xeon Platinum 8336C, one pinned core per process.
 
 | Step | Command | Output | Runtime of the authors' run |
 |---|---|---|---|
-| Smoke test | `scripts/reproduce.sh smoke` | stdout (`exact True`, `scalar_bad 0`) | 2 min |
-| C++ exactness on PUB2 | `scripts/reproduce.sh cpp-smoke` | `bin/pub2/` (inputs), `results/cpp_verify_pub2.json` | 1 min export + 1 min verify |
+| Smoke test | `scripts/reproduce.sh smoke` | stdout (`exact True`, `scalar_bad 0`) | 1 min |
+| C++ exactness on PUB2 | `scripts/reproduce.sh cpp-smoke` | `bin/pub2/` (inputs), `results/cpp_verify_pub2.json` (1,010,000 parcels, 0 mismatches) | about 1 min (export 40 s, verify 30 s) |
 | Python E1-E5, PUB2 family | `scripts/reproduce.sh pilot` | `results/pilot_E{1..5}_pub2.json` | E1 25 min, E2 45 min, E3 2 min, E4 2 min, E5 5-40 min (M4) |
 | Python E1-E3, synthetic generators | `scripts/reproduce.sh synthetic` | `results/pilot_E1.json`, `pilot_E2_tuned.json`, `pilot_E3.json` | about 1 h (M4) |
 | C++ export, verify, time | `scripts/reproduce.sh cpp` | `results/cpp_verify_pub2*.json`, `results/cpp_E1E2_pub2*.json`, `results/tables_cpp.md` | export 30 min; verify 65 min (PUB2 1 min, x60 3 min, x240 8 min, x1000 53 min); timing 35 min (Xeon) |
