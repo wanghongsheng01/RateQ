@@ -1,0 +1,1906 @@
+{
+ "PUB2": {
+  "index": {
+   "n": 19,
+   "build_s": 0.002198,
+   "bytes": 272684,
+   "U": 1494,
+   "signatures": 71,
+   "local_signatures": 42,
+   "groups": 5,
+   "elem_intervals": 679,
+   "differs_from_python": 0
+  },
+  "runs": {
+   "olist_e1_s11": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 1,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 1.201,
+    "evals_batch": 1.243
+   },
+   "olist_e1_s12": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 1,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 1.248,
+    "evals_batch": 1.291
+   },
+   "olist_e1_s13": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 1,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 1.241,
+    "evals_batch": 1.268
+   },
+   "olist_e1_s14": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 1,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 1.225,
+    "evals_batch": 1.263
+   },
+   "olist_e1_s15": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 1,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 1.199,
+    "evals_batch": 1.245
+   },
+   "olist_e2_s22": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 1.2263,
+    "evals_batch": 1.2617
+   },
+   "olist_e2_s23": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 1.2287,
+    "evals_batch": 1.2645
+   },
+   "olist_e2_s24": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 1.227,
+    "evals_batch": 1.2625
+   },
+   "olist_e2_s25": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 1.228,
+    "evals_batch": 1.2634
+   },
+   "olist_e2_s26": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 1.2218,
+    "evals_batch": 1.2566
+   },
+   "furn_e1_s11": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 1,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 1.942,
+    "evals_batch": 1.964
+   },
+   "furn_e1_s12": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 1,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 1.87,
+    "evals_batch": 1.887
+   },
+   "furn_e1_s13": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 1,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 1.986,
+    "evals_batch": 2.004
+   },
+   "furn_e1_s14": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 1,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 1.932,
+    "evals_batch": 1.947
+   },
+   "furn_e1_s15": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 1,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 1.934,
+    "evals_batch": 1.955
+   },
+   "furn_e2_s22": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 1.975,
+    "evals_batch": 1.9909
+   },
+   "furn_e2_s23": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 1.9796,
+    "evals_batch": 1.9963
+   },
+   "furn_e2_s24": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 1.9672,
+    "evals_batch": 1.9838
+   },
+   "furn_e2_s25": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 1.9674,
+    "evals_batch": 1.9837
+   },
+   "furn_e2_s26": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 1.9788,
+    "evals_batch": 1.9954
+   }
+  },
+  "wall_s": 60.85864281654358,
+  "stderr": "",
+  "summary": {
+   "parcels": 1010000,
+   "mismatch_vs_py_brute_vec": {
+    "B1": 0,
+    "B1s": 0,
+    "B1v": 0,
+    "RQ_q1": 0,
+    "RQ_batch": 0
+   },
+   "parcels_with_py_brute1": 10000,
+   "mismatch_vs_py_brute1": {
+    "B1": 0,
+    "B1s": 0,
+    "B1v": 0,
+    "RQ_q1": 0,
+    "RQ_batch": 0
+   },
+   "index_identical_to_python": true
+  }
+ },
+ "PUB2x60": {
+  "index": {
+   "n": 60,
+   "build_s": 0.003856,
+   "bytes": 817556,
+   "U": 1494,
+   "signatures": 71,
+   "local_signatures": 42,
+   "groups": 5,
+   "elem_intervals": 679,
+   "differs_from_python": 0
+  },
+  "runs": {
+   "olist_e1_s11": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 1,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 1.496,
+    "evals_batch": 1.554
+   },
+   "olist_e1_s12": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 1,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 1.602,
+    "evals_batch": 1.668
+   },
+   "olist_e1_s13": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 1,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 1.551,
+    "evals_batch": 1.607
+   },
+   "olist_e1_s14": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 1,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 1.503,
+    "evals_batch": 1.57
+   },
+   "olist_e1_s15": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 1,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 1.461,
+    "evals_batch": 1.526
+   },
+   "olist_e2_s22": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 1.5231,
+    "evals_batch": 1.5773
+   },
+   "olist_e2_s23": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 1.531,
+    "evals_batch": 1.5854
+   },
+   "olist_e2_s24": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 1.5269,
+    "evals_batch": 1.5813
+   },
+   "olist_e2_s25": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 1.529,
+    "evals_batch": 1.5832
+   },
+   "olist_e2_s26": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 1.5196,
+    "evals_batch": 1.573
+   },
+   "furn_e1_s11": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 1,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 4.121,
+    "evals_batch": 4.216
+   },
+   "furn_e1_s12": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 1,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 3.872,
+    "evals_batch": 3.963
+   },
+   "furn_e1_s13": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 1,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 4.209,
+    "evals_batch": 4.29
+   },
+   "furn_e1_s14": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 1,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 4.175,
+    "evals_batch": 4.257
+   },
+   "furn_e1_s15": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 1,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 4.185,
+    "evals_batch": 4.262
+   },
+   "furn_e2_s22": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 4.1975,
+    "evals_batch": 4.2787
+   },
+   "furn_e2_s23": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 4.2021,
+    "evals_batch": 4.2847
+   },
+   "furn_e2_s24": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 4.1875,
+    "evals_batch": 4.2686
+   },
+   "furn_e2_s25": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 4.1836,
+    "evals_batch": 4.2648
+   },
+   "furn_e2_s26": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 4.2149,
+    "evals_batch": 4.2973
+   }
+  },
+  "wall_s": 184.93635988235474,
+  "stderr": "",
+  "summary": {
+   "parcels": 1010000,
+   "mismatch_vs_py_brute_vec": {
+    "B1": 0,
+    "B1s": 0,
+    "B1v": 0,
+    "RQ_q1": 0,
+    "RQ_batch": 0
+   },
+   "parcels_with_py_brute1": 10000,
+   "mismatch_vs_py_brute1": {
+    "B1": 0,
+    "B1s": 0,
+    "B1v": 0,
+    "RQ_q1": 0,
+    "RQ_batch": 0
+   },
+   "index_identical_to_python": true
+  }
+ },
+ "PUB2x240": {
+  "index": {
+   "n": 240,
+   "build_s": 0.019146,
+   "bytes": 3168524,
+   "U": 1494,
+   "signatures": 71,
+   "local_signatures": 42,
+   "groups": 5,
+   "elem_intervals": 679,
+   "differs_from_python": 0
+  },
+  "runs": {
+   "olist_e1_s11": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 1,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 2.984,
+    "evals_batch": 3.02
+   },
+   "olist_e1_s12": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 1,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 3.36,
+    "evals_batch": 3.392
+   },
+   "olist_e1_s13": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 1,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 3.39,
+    "evals_batch": 3.413
+   },
+   "olist_e1_s14": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 1,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 3.16,
+    "evals_batch": 3.188
+   },
+   "olist_e1_s15": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 1,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 2.85,
+    "evals_batch": 2.888
+   },
+   "olist_e2_s22": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 3.1732,
+    "evals_batch": 3.2052
+   },
+   "olist_e2_s23": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 3.2007,
+    "evals_batch": 3.2321
+   },
+   "olist_e2_s24": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 3.1842,
+    "evals_batch": 3.2152
+   },
+   "olist_e2_s25": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 3.1983,
+    "evals_batch": 3.2294
+   },
+   "olist_e2_s26": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 3.1585,
+    "evals_batch": 3.1884
+   },
+   "furn_e1_s11": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 1,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 13.491,
+    "evals_batch": 13.548
+   },
+   "furn_e1_s12": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 1,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 12.781,
+    "evals_batch": 12.822
+   },
+   "furn_e1_s13": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 1,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 13.934,
+    "evals_batch": 13.985
+   },
+   "furn_e1_s14": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 1,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 13.805,
+    "evals_batch": 13.85
+   },
+   "furn_e1_s15": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 1,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 13.793,
+    "evals_batch": 13.848
+   },
+   "furn_e2_s22": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 13.9197,
+    "evals_batch": 13.9664
+   },
+   "furn_e2_s23": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 13.9414,
+    "evals_batch": 13.9886
+   },
+   "furn_e2_s24": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 13.8879,
+    "evals_batch": 13.9339
+   },
+   "furn_e2_s25": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 13.8568,
+    "evals_batch": 13.9026
+   },
+   "furn_e2_s26": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 13.9867,
+    "evals_batch": 14.034
+   }
+  },
+  "wall_s": 465.7216730117798,
+  "stderr": "",
+  "summary": {
+   "parcels": 1010000,
+   "mismatch_vs_py_brute_vec": {
+    "B1": 0,
+    "B1s": 0,
+    "B1v": 0,
+    "RQ_q1": 0,
+    "RQ_batch": 0
+   },
+   "parcels_with_py_brute1": 10000,
+   "mismatch_vs_py_brute1": {
+    "B1": 0,
+    "B1s": 0,
+    "B1v": 0,
+    "RQ_q1": 0,
+    "RQ_batch": 0
+   },
+   "index_identical_to_python": true
+  }
+ },
+ "PUB2x1000": {
+  "index": {
+   "n": 1000,
+   "build_s": 0.052324,
+   "bytes": 13014836,
+   "U": 1494,
+   "signatures": 71,
+   "local_signatures": 42,
+   "groups": 5,
+   "elem_intervals": 679,
+   "differs_from_python": 0
+  },
+  "runs": {
+   "olist_e1_s11": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 1,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 8.196,
+    "evals_batch": 8.241
+   },
+   "olist_e1_s12": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 1,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 9.582,
+    "evals_batch": 9.626
+   },
+   "olist_e1_s13": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 9.681,
+    "evals_batch": 9.711
+   },
+   "olist_e1_s14": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 8.634,
+    "evals_batch": 8.676
+   },
+   "olist_e1_s15": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 7.681,
+    "evals_batch": 7.729
+   },
+   "olist_e2_s22": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 8.856,
+    "evals_batch": 8.8921
+   },
+   "olist_e2_s23": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 8.9619,
+    "evals_batch": 8.9984
+   },
+   "olist_e2_s24": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 8.8979,
+    "evals_batch": 8.9339
+   },
+   "olist_e2_s25": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 8.9392,
+    "evals_batch": 8.9749
+   },
+   "olist_e2_s26": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 8.7784,
+    "evals_batch": 8.8134
+   },
+   "furn_e1_s11": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 1,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 54.595,
+    "evals_batch": 54.712
+   },
+   "furn_e1_s12": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 50.961,
+    "evals_batch": 51.061
+   },
+   "furn_e1_s13": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 56.321,
+    "evals_batch": 56.427
+   },
+   "furn_e1_s14": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 55.135,
+    "evals_batch": 55.251
+   },
+   "furn_e1_s15": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 55.394,
+    "evals_batch": 55.522
+   },
+   "furn_e2_s22": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 56.1863,
+    "evals_batch": 56.2898
+   },
+   "furn_e2_s23": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 56.2545,
+    "evals_batch": 56.357
+   },
+   "furn_e2_s24": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 56.0582,
+    "evals_batch": 56.1585
+   },
+   "furn_e2_s25": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 55.919,
+    "evals_batch": 56.0207
+   },
+   "furn_e2_s26": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "first_bad": -1,
+    "evals_q1": 56.5249,
+    "evals_batch": 56.6266
+   }
+  },
+  "wall_s": 3179.6634690761566,
+  "stderr": "",
+  "summary": {
+   "parcels": 1010000,
+   "mismatch_vs_py_brute_vec": {
+    "B1": 0,
+    "B1s": 0,
+    "B1v": 0,
+    "RQ_q1": 0,
+    "RQ_batch": 0
+   },
+   "parcels_with_py_brute1": 3000,
+   "mismatch_vs_py_brute1": {
+    "B1": 0,
+    "B1s": 0,
+    "B1v": 0,
+    "RQ_q1": 0,
+    "RQ_batch": 0
+   },
+   "index_identical_to_python": true
+  }
+ }
+}

@@ -1,0 +1,152 @@
+{
+ "PUB2": {
+  "n": 19,
+  "price_edit": {
+   "RQ_base": {
+    "mean_us": 90.53144499999279,
+    "p50_us": 43.917000000059936,
+    "p95_us": 299.5145499998685
+   },
+   "RQ_plus_invalidate": {
+    "mean_us": 34.50394499999953,
+    "p50_us": 15.520499999976956,
+    "p95_us": 149.82709999998823
+   },
+   "duckdb_update": {
+    "mean_us": 158.4918500000021,
+    "p50_us": 146.35450000011207,
+    "p95_us": 188.116350000056
+   },
+   "rows_touched_mean": 3.99
+  },
+  "RQ_base_rebuild_s": 0.03606558399999993,
+  "precompute_rebuild_s": 0.03998095899999998,
+  "RQ_plus_requery_20k_after_edits_s": 0.68753375,
+  "exact_after_price_edits": {
+   "RQ_base": 1.0,
+   "RQ_plus": 1.0
+  },
+  "fuel_edit_us": 37.4999999999126,
+  "zone_edit": {
+   "mean_us": 1365.1525000000217,
+   "p50_us": 1849.6040000000048,
+   "p95_us": 2089.0161499997894
+  },
+  "zone_new_signatures": 59,
+  "exact_after_zone_edits": 1.0
+ },
+ "PUB2x60": {
+  "n": 60,
+  "price_edit": {
+   "RQ_base": {
+    "mean_us": 76.37270500000737,
+    "p50_us": 39.89550000027542,
+    "p95_us": 235.49314999984347
+   },
+   "RQ_plus_invalidate": {
+    "mean_us": 38.88039499999607,
+    "p50_us": 16.562500000372182,
+    "p95_us": 148.72080000001284
+   },
+   "duckdb_update": {
+    "mean_us": 161.78414999999947,
+    "p50_us": 155.72900000004887,
+    "p95_us": 210.90175000000315
+   },
+   "rows_touched_mean": 3.3
+  },
+  "RQ_base_rebuild_s": 0.1260099170000002,
+  "precompute_rebuild_s": 0.15261812500000005,
+  "RQ_plus_requery_20k_after_edits_s": 0.6601343750000002,
+  "exact_after_price_edits": {
+   "RQ_base": 1.0,
+   "RQ_plus": 1.0
+  },
+  "fuel_edit_us": 34.95899999972352,
+  "zone_edit": {
+   "mean_us": 1625.51505999998,
+   "p50_us": 1958.5209999997132,
+   "p95_us": 2224.3876499998814
+  },
+  "zone_new_signatures": 60,
+  "exact_after_zone_edits": 1.0
+ },
+ "PUB2x240": {
+  "n": 240,
+  "price_edit": {
+   "RQ_base": {
+    "mean_us": 70.8260399999805,
+    "p50_us": 37.95800000006011,
+    "p95_us": 217.79199999976095
+   },
+   "RQ_plus_invalidate": {
+    "mean_us": 44.06827999993367,
+    "p50_us": 17.06250000044207,
+    "p95_us": 171.5041500004233
+   },
+   "duckdb_update": {
+    "mean_us": 163.36036499999372,
+    "p50_us": 159.85400000051442,
+    "p95_us": 203.0723000009615
+   },
+   "rows_touched_mean": 2.91
+  },
+  "RQ_base_rebuild_s": 0.5751846250000003,
+  "precompute_rebuild_s": 0.579994082999999,
+  "RQ_plus_requery_20k_after_edits_s": 0.9658737080000002,
+  "exact_after_price_edits": {
+   "RQ_base": 1.0,
+   "RQ_plus": 1.0
+  },
+  "fuel_edit_us": 72.37500000023545,
+  "zone_edit": {
+   "mean_us": 2270.7041600000007,
+   "p50_us": 2595.728499999339,
+   "p95_us": 3870.018450000056
+  },
+  "zone_new_signatures": 77,
+  "exact_after_zone_edits": 1.0
+ },
+ "PUB2x1000": {
+  "n": 1000,
+  "price_edit": {
+   "RQ_base": {
+    "mean_us": 200.11474999996892,
+    "p50_us": 90.1244999980122,
+    "p95_us": 498.7340000027978
+   },
+   "RQ_plus_invalidate": {
+    "mean_us": 81.13707500037037,
+    "p50_us": 33.85400000155414,
+    "p95_us": 268.477050004634
+   },
+   "duckdb_update": {
+    "mean_us": 208.2135650006478,
+    "p50_us": 159.72950000531227,
+    "p95_us": 506.17739999765377
+   },
+   "rows_touched_mean": 3.465
+  },
+  "RQ_base_rebuild_s": 7.364785917000006,
+  "precompute_rebuild_s": 5.332176791000009,
+  "RQ_plus_requery_20k_after_edits_s": 1.7961054170000068,
+  "exact_after_price_edits": {
+   "RQ_base": 1.0,
+   "RQ_plus": 1.0
+  },
+  "fuel_edit_us": 787.2500000019045,
+  "zone_edit": {
+   "mean_us": 8532.06491999913,
+   "p50_us": 7049.603999995214,
+   "p95_us": 17429.434900002143
+  },
+  "zone_new_signatures": 63,
+  "exact_after_zone_edits": 1.0
+ },
+ "_env": {
+  "python": "3.9.6",
+  "machine": "arm64",
+  "cpu": "Apple M4",
+  "threads": 1
+ }
+}

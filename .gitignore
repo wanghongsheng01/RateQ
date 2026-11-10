@@ -1,0 +1,15 @@
+# build products and local environments
+.venv/
+__pycache__/
+*.pyc
+cpp/rq
+cpp/*.o
+# binary experiment inputs written by code/export_bin.py (regenerable)
+bin/
+_private/
+# run logs and scratch output
+results/logs/
+results/rev1/logs/
+results/rev1/done/
+paper/build/
+.DS_Store

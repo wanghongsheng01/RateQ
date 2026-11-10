@@ -1,0 +1,45 @@
+{
+ "shapes": {
+  "records_scanned": 403816,
+  "us_records_by_length_unit": {
+   "in": 208535
+  },
+  "us_parcels_used": 208535,
+  "us_parcels_unparseable": 0,
+  "distinct_shapes": 1365,
+  "distinct_shape_share": 0.0065456637974440745,
+  "residential_share": 0.6277171697796533,
+  "weight_lb": {
+   "p5": 11.0,
+   "p25": 37.0,
+   "p50": 44.0,
+   "p75": 60.0,
+   "p95": 85.0,
+   "p99": 98.0
+  },
+  "longest_in": {
+   "p5": 23.0,
+   "p25": 37.0,
+   "p50": 42.0,
+   "p75": 51.0,
+   "p95": 76.0,
+   "p99": 89.0
+  },
+  "girth_plus_length_in": {
+   "p5": 65.0,
+   "p25": 81.0,
+   "p50": 103.0,
+   "p75": 118.0,
+   "p95": 130.0,
+   "p99": 148.0
+  }
+ },
+ "zcta": {
+  "source": "ACS 2023 5-year estimates, table B01003 (total population), US Census Bureau table-based summary file acsdt5y2023-b01003.dat",
+  "zcta_in_workload_list": 33144,
+  "zcta_with_population": 32921,
+  "population_covered": 334590237,
+  "population_all_zcta": 335555510,
+  "zcta_zero_pop": 364
+ }
+}

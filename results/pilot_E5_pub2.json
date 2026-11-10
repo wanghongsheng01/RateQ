@@ -1,0 +1,166 @@
+{
+ "PUB2": {
+  "n": 19,
+  "N": 200000,
+  "full_recompute_s": 1.8372006355784833,
+  "init_s": 2.0957890609279275,
+  "exact_final_state": true,
+  "edits": {
+   "cell": {
+    "ours_s": 0.0010331359831616282,
+    "support": 214.99,
+    "recomputed": 4.77,
+    "service_level_s": 0.13678825737908482,
+    "service_support": 197650.33,
+    "count": 100
+   },
+   "band": {
+    "ours_s": 0.0025176286697387697,
+    "support": 1545.45,
+    "recomputed": 17.85,
+    "service_level_s": 0.12499335971660912,
+    "service_support": 198070.4,
+    "count": 20
+   },
+   "gri": {
+    "ours_s": 0.2475493949217101,
+    "support": 197905.66666666666,
+    "recomputed": 14046.666666666666,
+    "count": 3
+   },
+   "fuel": {
+    "ours_s": 0.013021358444044987,
+    "support": 3818.3333333333335,
+    "recomputed": 76.66666666666667,
+    "count": 3
+   }
+  }
+ },
+ "PUB2x60": {
+  "n": 60,
+  "N": 200000,
+  "full_recompute_s": 6.049875083845109,
+  "init_s": 6.255697424989194,
+  "exact_final_state": true,
+  "edits": {
+   "cell": {
+    "ours_s": 0.0009435006324201822,
+    "support": 146.04,
+    "recomputed": 0.23,
+    "service_level_s": 0.10694660888519138,
+    "service_support": 187802.95,
+    "count": 100
+   },
+   "band": {
+    "ours_s": 0.0016674661077558995,
+    "support": 1356.1,
+    "recomputed": 0.0,
+    "service_level_s": 0.11502320703584701,
+    "service_support": 187117.85,
+    "count": 20
+   },
+   "gri": {
+    "ours_s": 0.08991704725970824,
+    "support": 182231.0,
+    "recomputed": 56.333333333333336,
+    "count": 3
+   },
+   "fuel": {
+    "ours_s": 0.03605315756673614,
+    "support": 3804.3333333333335,
+    "recomputed": 298.0,
+    "count": 3
+   }
+  }
+ },
+ "PUB2x240": {
+  "n": 240,
+  "N": 200000,
+  "full_recompute_s": 22.177202939987183,
+  "init_s": 23.48418642114848,
+  "exact_final_state": true,
+  "edits": {
+   "cell": {
+    "ours_s": 0.000519189452752471,
+    "support": 136.95,
+    "recomputed": 0.0,
+    "service_level_s": 0.09219437303487212,
+    "service_support": 169821.08,
+    "count": 100
+   },
+   "band": {
+    "ours_s": 0.005491081229411066,
+    "support": 2207.1,
+    "recomputed": 13.15,
+    "service_level_s": 0.09532466703094541,
+    "service_support": 180694.2,
+    "count": 20
+   },
+   "gri": {
+    "ours_s": 0.08373899447421233,
+    "support": 153731.0,
+    "recomputed": 0.0,
+    "count": 3
+   },
+   "fuel": {
+    "ours_s": 0.13150320031369725,
+    "support": 3845.0,
+    "recomputed": 323.3333333333333,
+    "count": 3
+   }
+  }
+ },
+ "PUB2x1000": {
+  "n": 1000,
+  "N": 200000,
+  "full_recompute_s": 90.65728778904304,
+  "init_s": 89.50438141170889,
+  "exact_final_state": true,
+  "edits": {
+   "cell": {
+    "ours_s": 0.0005219444772228599,
+    "support": 128.51,
+    "recomputed": 0.0,
+    "service_level_s": 0.10058613207191229,
+    "service_support": 176317.96,
+    "count": 100
+   },
+   "band": {
+    "ours_s": 0.0011596186086535454,
+    "support": 834.85,
+    "recomputed": 0.0,
+    "service_level_s": 0.08030973512213677,
+    "service_support": 143525.15,
+    "count": 20
+   },
+   "gri": {
+    "ours_s": 0.08690996545677383,
+    "support": 189633.0,
+    "recomputed": 0.0,
+    "count": 3
+   },
+   "fuel": {
+    "ours_s": 0.5195103681956729,
+    "support": 3833.3333333333335,
+    "recomputed": 313.3333333333333,
+    "count": 3
+   }
+  }
+ },
+ "_env": {
+  "python": "3.10.12",
+  "numpy": "2.2.6",
+  "machine": "x86_64",
+  "host": "server",
+  "cpu": "Intel(R) Xeon(R) Platinum 8336C CPU @ 2.30GHz",
+  "threads": 1,
+  "affinity": [
+   2
+  ],
+  "loadavg_at_save": [
+   2.92,
+   2.5,
+   2.03
+  ]
+ }
+}

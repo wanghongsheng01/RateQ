@@ -1,0 +1,72 @@
+{
+ "ups": {
+  "_source": "2026 UPS Rate & Service Guide (Daily Rates, updated 2026-09-07), printed pp. 179-183 (PDF 181-185)",
+  "zone_bands": [
+   "2",
+   "3-4",
+   "5-6",
+   "7+"
+  ],
+  "AHS_weight": [
+   46.5,
+   50.75,
+   56.25,
+   58.75
+  ],
+  "AHS_dimension": [
+   30.0,
+   33.25,
+   38.5,
+   40.5
+  ],
+  "LargePackage_residential": [
+   254.5,
+   274.5,
+   320.5,
+   331.0
+  ],
+  "DAS_commercial": 4.5,
+  "DAS_residential": 6.55,
+  "DAS_ext_commercial": 5.7,
+  "DAS_ext_residential": 8.85,
+  "Residential_ground": 6.5,
+  "Residential_air": 7.0,
+  "OverMax": 1875.0
+ },
+ "fedex": {
+  "_source": "FedEx Service Guide 2026 (updated 2026-09-11), pp. 128-135, 142",
+  "zone_bands": [
+   "2",
+   "3-4",
+   "5-6",
+   "7+"
+  ],
+  "AHS_dimension": [
+   29.5,
+   32.75,
+   38.5,
+   40.75
+  ],
+  "AHS_weight": [
+   46.0,
+   50.25,
+   56.25,
+   58.75
+  ],
+  "Oversize": [
+   255.0,
+   275.0,
+   320.0,
+   330.0
+  ],
+  "DAS_commercial": 4.45,
+  "DAS_ext_commercial": 5.55,
+  "DAS_residential": 6.6,
+  "DAS_ext_residential": 8.8,
+  "DAS_remote": 16.75,
+  "Residential_ground_hd": 6.45,
+  "Residential_express": 6.95,
+  "AHS_dimension_min_billable_lb": 40,
+  "Oversize_min_billable_lb": 90
+ }
+}

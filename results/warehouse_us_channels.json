@@ -1,0 +1,13 @@
+{
+ "median": 14,
+ "max": 31,
+ "parcel_weighted_mean": 24.35,
+ "warehouses": 23,
+ "carriers_median": 3,
+ "carriers_max": 8,
+ "all_median": 11.0,
+ "all_max": 31,
+ "all_parcel_weighted_mean": 23.24,
+ "all_warehouses": 40,
+ "scope": "2026, warehouses with >= 1,000 parcels; channel = distinct carrier channel"
+}

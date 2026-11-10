@@ -1,0 +1,269 @@
+{
+ "ERP": {
+  "index": {
+   "n": 10,
+   "build_s": 0.169891,
+   "bytes": 4914304,
+   "U": 366290,
+   "signatures": 148,
+   "local_signatures": 65,
+   "groups": 4,
+   "elem_intervals": 1555,
+   "differs_from_python": 0
+  },
+  "runs": {
+   "erp_e1_s11": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 1,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "evals_q1": 4.687,
+    "evals_batch": 4.709
+   },
+   "erp_e1_s12": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 1,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "evals_q1": 4.602,
+    "evals_batch": 4.622
+   },
+   "erp_e1_s13": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 1,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "evals_q1": 4.652,
+    "evals_batch": 4.666
+   },
+   "erp_e1_s14": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 1,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "evals_q1": 4.632,
+    "evals_batch": 4.658
+   },
+   "erp_e1_s15": {
+    "N": 1000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 1,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "evals_q1": 4.597,
+    "evals_batch": 4.619
+   },
+   "erp_e2_s22": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "evals_q1": 4.6431,
+    "evals_batch": 4.6675
+   },
+   "erp_e2_s23": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "evals_q1": 4.6358,
+    "evals_batch": 4.6605
+   },
+   "erp_e2_s24": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "evals_q1": 4.6391,
+    "evals_batch": 4.6629
+   },
+   "erp_e2_s25": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "evals_q1": 4.6353,
+    "evals_batch": 4.66
+   },
+   "erp_e2_s26": {
+    "N": 100000,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 0,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "evals_q1": 4.6356,
+    "evals_batch": 4.6603
+   },
+   "all": {
+    "N": 198109,
+    "mismatch_vs_py_brute_vec": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "has_py_brute1": 1,
+    "mismatch_vs_py_brute1": {
+     "B1": 0,
+     "B1s": 0,
+     "B1v": 0,
+     "RQ_q1": 0,
+     "RQ_batch": 0
+    },
+    "max_abs_cost_diff": 0,
+    "evals_q1": 4.6379,
+    "evals_batch": 4.6624
+   }
+  },
+  "wall_s": 64.08095622062683,
+  "stderr": "",
+  "summary": {
+   "parcels": 703109,
+   "mismatch_vs_py_brute_vec": {
+    "B1": 0,
+    "B1s": 0,
+    "B1v": 0,
+    "RQ_q1": 0,
+    "RQ_batch": 0
+   },
+   "parcels_with_py_brute1": 203109,
+   "mismatch_vs_py_brute1": {
+    "B1": 0,
+    "B1s": 0,
+    "B1v": 0,
+    "RQ_q1": 0,
+    "RQ_batch": 0
+   },
+   "index_identical_to_python": true
+  }
+ }
+}

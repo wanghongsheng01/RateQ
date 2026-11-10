@@ -1,0 +1,103 @@
+{
+ "log_semantics": "after",
+ "country": "USA",
+ "build_s": 6.625607013702393,
+ "services": [
+  "svc01",
+  "svc02",
+  "svc03",
+  "svc04",
+  "svc05",
+  "svc06",
+  "svc07",
+  "svc08",
+  "svc09",
+  "svc12"
+ ],
+ "parcels": 198109,
+ "parcel_build_s": 7.531422138214111,
+ "rule_versions_used": 22,
+ "replay": {
+  "n": 198109,
+  "bw": 0.9138,
+  "base": 0.9584,
+  "total": 0.4782,
+  "total_1pct": 0.4816,
+  "n_nozip": 102360,
+  "total_nozip": 0.8715
+ },
+ "replay_per_template": {
+  "svc01": {
+   "n": 17152,
+   "bw": 15118,
+   "base": 15885,
+   "total": 8322,
+   "total_1pct": 8394,
+   "n_nozip": 8464,
+   "total_nozip": 7836
+  },
+  "svc04": {
+   "n": 33407,
+   "bw": 31867,
+   "base": 32290,
+   "total": 16054,
+   "total_1pct": 16208,
+   "n_nozip": 15643,
+   "total_nozip": 14924
+  },
+  "svc05": {
+   "n": 4067,
+   "bw": 3796,
+   "base": 3935,
+   "total": 2046,
+   "total_1pct": 2061,
+   "n_nozip": 1984,
+   "total_nozip": 1922
+  },
+  "svc06": {
+   "n": 15482,
+   "bw": 14625,
+   "base": 15212,
+   "total": 7696,
+   "total_1pct": 7728,
+   "n_nozip": 7343,
+   "total_nozip": 7129
+  },
+  "svc07": {
+   "n": 4628,
+   "bw": 4451,
+   "base": 4488,
+   "total": 2343,
+   "total_1pct": 2347,
+   "n_nozip": 2244,
+   "total_nozip": 2176
+  },
+  "svc08": {
+   "n": 243,
+   "bw": 227,
+   "base": 232,
+   "total": 202,
+   "total_1pct": 202,
+   "n_nozip": 243,
+   "total_nozip": 202
+  },
+  "svc09": {
+   "n": 102158,
+   "bw": 89978,
+   "base": 96853,
+   "total": 52827,
+   "total_1pct": 53229,
+   "n_nozip": 53835,
+   "total_nozip": 50184
+  },
+  "svc12": {
+   "n": 20972,
+   "bw": 20972,
+   "base": 20972,
+   "total": 5248,
+   "total_1pct": 5248,
+   "n_nozip": 12604,
+   "total_nozip": 4831
+  }
+ }
+}

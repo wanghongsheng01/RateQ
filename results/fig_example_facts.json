@@ -1,0 +1,40 @@
+{
+ "key": 389117,
+ "box": [
+  49.0,
+  14.0,
+  8.0
+ ],
+ "day": 300,
+ "winner_changes": [
+  [
+   44.25,
+   "USPS_GA_Commercial",
+   "FedEx_Ground"
+  ],
+  [
+   50.25,
+   "FedEx_Ground",
+   "USPS_GA_Commercial"
+  ]
+ ],
+ "eligible_PM": true,
+ "cost_at_1": {
+  "USPS_GA_Commercial": 118.0,
+  "USPS_PM_Commercial": 140.88,
+  "UPS_Ground": 146.3,
+  "FedEx_Ground": 130.33
+ },
+ "cost_at_39": {
+  "USPS_GA_Commercial": 127.97,
+  "USPS_PM_Commercial": 150.82,
+  "UPS_Ground": 146.3,
+  "FedEx_Ground": 130.33
+ },
+ "cost_at_41": {
+  "USPS_GA_Commercial": 131.78,
+  "USPS_PM_Commercial": 154.91,
+  "UPS_Ground": 148.93,
+  "FedEx_Ground": 133.35
+ }
+}

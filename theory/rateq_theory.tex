@@ -1,0 +1,998 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs,tabularx,longtable,array}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{assumption}{Assumption}
+\renewcommand{\theassumption}{A\arabic{assumption}}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\lexlt}{\mathrel{<_{\mathrm{lex}}}}
+\newcommand{\lexle}{\mathrel{\le_{\mathrm{lex}}}}
+\newcommand{\cfs}{\mathrm{CFS}}
+\newcommand{\fl}[1]{\left\lfloor #1 \right\rfloor}
+\newcommand{\ce}[1]{\left\lceil #1 \right\rceil}
+\newcommand{\Fu}{\mathsf{F}}
+\newcommand{\rnd}[1]{\llbracket #1 \rrbracket}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\SC}{\mathcal S}
+\providecommand{\llbracket}{[\![}
+\providecommand{\rrbracket}{]\!]}
+
+\title{RateQ: Formal Model, Correctness, Instance Optimality and\\ Exact Maintenance of Cheapest-Feasible-Service Queries}
+\author{Technical companion to the RateQ paper (artifact document)}
+\date{}
+
+\emergencystretch=3em
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This document gives complete proofs for the guarantees claimed for RateQ. We
+formalise rate rule programs exactly as the reference implementation evaluates them,
+including minimum billable tiers, dimensional weight, rounding rules, extrapolation,
+surcharges with eligibility predicates, fee groups, fuel and percentage-of-total rules.
+We prove that the suffix-minimum hull bound never exceeds the true cost (Lemma~\ref{lem:L3}),
+also in its surcharge-class refinement (Lemma~\ref{lem:L3plus}). We prove that the threshold
+query returns exactly the brute-force answer with the smaller-identifier tie rule, and
+that it is instance optimal in a precisely stated access model (Theorem~\ref{thm:T4}). We
+prove that the top-2 repair over a support set yields exactly the state of a full
+recomputation for cell, band, table, rule, zone and fuel edits (Theorem~\ref{thm:T7}), and we
+state construction, space, query and maintenance bounds. Results on envelope complexity
+and on general linear predicates are proved where possible and stated as conjectures
+otherwise. Appendix~\ref{app:code} maps every definition to the code, and
+Appendix~\ref{app:mismatch} lists every point where the code and the theory differ.
+\end{abstract}
+
+\section{Model}\label{sec:model}
+
+\subsection{Parcels and features}
+A parcel is $x=(\kappa,a,L,M,S,\mathit{res},d)$ with integer key
+$\kappa=\mathit{origin}\cdot 10^5+\mathit{zip}$, actual weight $a\ge 0$, sorted dimensions
+$L\ge M\ge S\ge 0$, residential flag $\mathit{res}$ and ship day $d\in\mathbb Z$. Its
+\emph{parcel-level features} are $L,M,S$, $G=L+2M+2S$, $V=LMS$, $L+M+S$, $a$,
+$\mathit{res}$, $\mathit{zip}$, $d$ and the month of $d$. Three further features depend on
+the service $s$: the billable weight $T$, the zone $\mathit{ZONE}$ and the delivery-area
+level $\mathit{DAS}$. A \emph{predicate} is any Boolean function of the feature vector. The
+implementation uses disjunctions of conjunctions of threshold, set-membership and range
+conditions. No result below requires monotonicity of predicates.
+
+\subsection{Rate rule programs}
+Services are identified by integers $s\in\SC=\{0,\dots,n-1\}$. We fix the tolerance
+$\epsilon=10^{-9}$ that the implementation uses for weight comparisons.
+
+\begin{definition}[Rate rule program]\label{def:program}
+A service $s$ consists of the following components.
+\begin{enumerate}[label=(\roman*),leftmargin=*]
+\item \emph{Zone map.} Starts $\zeta_{s,1}<\dots<\zeta_{s,R_s}$ and labels
+$\ell_{s,i}\in\{0,1,\dots\}\cup\{\bot\}$. Then $Z_s(\kappa)=\ell_{s,i}$ for
+$\kappa\in[\zeta_{s,i},\zeta_{s,i+1})$, with $\zeta_{s,R_s+1}=+\infty$, and $Z_s(\kappa)=\bot$ for
+$\kappa<\zeta_{s,1}$. The intervals are closed on the left and open on the right, and $\bot$
+means that the key is not served.
+\item \emph{Delivery-area map} $\mathit{DAS}_s(\kappa)$, defined in the same way, with value $0$
+below the first start.
+\item \emph{Group key} $\gamma(s)=(D_s,\theta_s,\rho_s,\phi_s,q_s,\mathit{carry}_s,\mathit{mode}_s)$:
+divisor, dimensional threshold, rounding rule, fuel class and the rounding grid, carry
+and weight mode of the enterprise rule language.
+\item \emph{Pre-tier billable weight} $t_s(x)=\tau_{\gamma(s)}(a,V)$, where
+\begin{itemize}[leftmargin=*]
+\item $\rho=\text{carrier}$: $\tau=\max(a,[V>\theta]\,V/D)$;
+\item $\rho=\text{erp-style}$: $\tau=\max(\bar a,\bar v)$, where $\bar a$ rounds $a$ down to
+$0.1$ and then up to an integer, and $\bar v$ is the analogous rounding of
+$\lceil 1000V/D\rceil/1000$ if this exceeds $1$, the value $1$ otherwise, and $0$ unless
+$V>\theta$;
+\item $\rho=\text{erp}$: $\tau=r_{q,\mathit{carry}}(y)$ with $y=\max(a,v)$, $a$ or $v$ for modes
+$1,2,3$, where $v=V/D$ if $D>0$ and $v=0$ otherwise, and $r_{q,\mathit{carry}}$ rounds up or
+half up to the grid $q$.
+\end{itemize}
+\item \emph{Minimum billable tiers} $(\pi^{(2)}_s,m^{(2)}_s)$ (lower tier) and
+$(\pi^{(1)}_s,m^{(1)}_s)$, each optional. Starting from $t=t_s(x)$, the tiers are applied in
+this order as $t\leftarrow\max(t,m^{(j)}_s)$ if $\pi^{(j)}_s$ holds on the feature vector with
+$T=t$. The result is the \emph{effective weight} $\hat t_s(x)$.
+\item \emph{Rate table of upper-closed threshold pieces.} Breakpoints
+$b_{s,1}<\dots<b_{s,K_s}$ define the bands $(b_{s,k-1},b_{s,k}]$, with $b_{s,0}=-\infty$, and
+prices $P_s[z,k]\in\mathbb N\cup\{\infty\}$ for every zone $z$ and band $k$. The band of a
+weight $t$ is
+\[
+k_s(t)=\min\bigl(\{k:b_{s,k}\ge t-\epsilon\}\cup\{K_s\}\bigr).
+\]
+\item \emph{Extrapolation.} Either none, or a limit $\lambda_s$ above which the base price
+is extrapolated linearly from the top band.
+\item \emph{Ineligibility predicate} $\psi_s$, which may be absent.
+\item \emph{Surcharge rules} $r\in\mathcal R_s$, each with a predicate $\pi_r$, a kind, a key
+$(g_r,\varphi_r)$ consisting of a fee group $g_r$ and a fuel flag $\varphi_r\in\{0,1\}$,
+per-zone amounts $A_r[z]$ and a coefficient $\mathit{coef}_r$. The kinds are \emph{fixed}
+(amount $A_r[z]$), \emph{per weight} (amount $\rnd{\mathit{coef}_r\,\hat t_s}$),
+\emph{percentage of base} (amount $\rnd{\mathit{coef}_r B_s/100}$) and \emph{percentage of
+total} (coefficient $\mathit{coef}_r$). Here $\rnd{\cdot}$ rounds to the nearest integer, with
+ties to even.
+\end{enumerate}
+\end{definition}
+
+The fuel schedule of class $\phi$ consists of starts $\sigma_{\phi,0}<\dots<\sigma_{\phi,W_\phi-1}$
+and ratios $f_{\phi,w}$ in basis points. The ratio on day $d$ is
+$f_\phi(d)=f_{\phi,\max(0,w(d))}$, where $w(d)=\max\{w:\sigma_{\phi,w}\le d\}$ and $w(d)=-1$ if
+no start precedes $d$. Thus the first segment extends to $-\infty$. A class without a
+schedule has $f\equiv 0$.
+
+\begin{definition}[Cost]\label{def:cost}
+Fix $x$ and $s$, and let $z=Z_s(\kappa)$, $\hat t=\hat t_s(x)$ and $f=f_{\phi_s}(d)$. All
+predicates of rules and $\psi_s$ are evaluated on the feature vector with $T=\hat t$,
+$\mathit{ZONE}=z$ and $\mathit{DAS}=\mathit{DAS}_s(\kappa)$. The \emph{base price} is
+\[
+B_s(x)=\begin{cases}
+\ce{\min(P_s[z,K_s]\,\hat t/b_{s,K_s},\,10^{15})-10^{-6}} & \text{if $s$ extrapolates and } \hat t>\lambda_s,\\
+P_s[z,k_s(\hat t)] & \text{otherwise.}
+\end{cases}
+\]
+In the first case $B_s=\infty$ if $P_s[z,K_s]=\infty$. Service $s$ is \emph{eligible} for $x$
+iff $z\ne\bot$, $\psi_s(x)$ is false, $B_s(x)<\infty$, and either $s$ extrapolates or
+$\hat t\le b_{s,K_s}$. For a key $(g,\varphi)$ let
+$\mu_{g,\varphi}=\max\bigl(\{0\}\cup\{\alpha_r: r\text{ fires},\ (g_r,\varphi_r)=(g,\varphi),\ r\text{ not
+percentage of total}\}\bigr)$, where $\alpha_r$ is the amount of $r$. Let
+$\Sigma^\Fu=\sum_{g}\mu_{g,1}$, $\Sigma^N=\sum_g\mu_{g,0}$, and let $Q$ be the sum of the
+coefficients of the firing percentage-of-total rules. Then
+\begin{equation}\label{eq:cost}
+c^0_s(x)=\fl{\frac{(B_s+\Sigma^\Fu)(10^4+f)+5000}{10^4}}+\Sigma^N,\qquad
+c_s(x)=c^0_s(x)+\rnd{c^0_s(x)\,Q/100},
+\end{equation}
+if $s$ is eligible, and $c_s(x)=\infty$ otherwise.
+\end{definition}
+
+\begin{definition}[CFS query]\label{def:cfs}
+Order pairs lexicographically: $(c,s)\lexlt(c',s')$ iff $c<c'$, or $c=c'$ and $s<s'$. Let
+$F(x)=\{(c_s(x),s):c_s(x)<\infty\}$. Then $\cfs(x)=\min_{\mathrm{lex}}F(x)$ if
+$F(x)\ne\emptyset$, and $\cfs(x)=\bot$ otherwise. The implementation encodes $\bot$ as
+$(\infty,-1)$.
+\end{definition}
+
+\subsection{Assumptions}
+Every result states which of the following assumptions it uses. Appendix~\ref{app:code}
+reports the check of each assumption against the instances.
+
+\begin{assumption}[Nonnegativity]\label{as:nonneg}
+Finite prices and fixed amounts are nonnegative. The coefficients of all surcharge kinds
+and all fuel ratios are nonnegative. Moreover $a,V\ge 0$.
+\end{assumption}
+\begin{assumption}[Magnitude]\label{as:mag}
+Finite prices are at most $10^{15}$, and every finite cost is smaller than the sentinel
+$2^{60}$ that encodes $\infty$.
+\end{assumption}
+\begin{assumption}[Extrapolation limit]\label{as:extrap}
+If $s$ extrapolates, then $\lambda_s\ge b_{s,K_s}$.
+\end{assumption}
+\begin{assumption}[Identifiers]\label{as:sid}
+The service list is ordered by identifier, and the service at position $i$ has
+identifier $i$.
+\end{assumption}
+\begin{assumption}[Tier predicates]\label{as:tier}
+Tier predicates read only parcel-level features, that is, not $T$, $\mathit{ZONE}$ or
+$\mathit{DAS}$. No tier minimum $m^{(j)}_s$ lies in $(b,b+\epsilon]$ for a breakpoint $b$ of
+$s$.
+\end{assumption}
+\begin{assumption}[Breakpoint spacing]\label{as:spacing}
+Distinct elements of $E_\gamma$ (Definition~\ref{def:elem}) differ by more than $\epsilon$.
+\end{assumption}
+\begin{assumption}[Shared delivery areas]\label{as:das}
+If the surcharge-class index treats $\mathit{DAS}$ as a parcel-level feature for a group,
+then all services of the group have the same delivery-area map.
+\end{assumption}
+
+Assumptions \ref{as:nonneg}--\ref{as:sid} are used for the query results. Assumptions
+\ref{as:tier}--\ref{as:spacing} are used only for maintenance, and Assumption~\ref{as:das}
+only for the surcharge-class index.
+
+\section{The Index}\label{sec:index}
+
+\begin{definition}[Key partition and signatures]\label{def:sig}
+Let $C=\{0\}\cup\bigcup_s\{\zeta_{s,i}\}$ with elements $u_1<\dots<u_N$. The elementary key
+intervals are $[u_i,u_{i+1})$. The \emph{signature} of interval $i$ is the vector
+$\sigma_i=(Z_s(u_i))_{s\in\SC}$, and $\Sigma$ is the set of distinct signatures. For a group
+$\gamma$, the \emph{local signature} is the restriction $\sigma|_\gamma$, and $\Sigma_\gamma$
+is the set of distinct local signatures.
+\end{definition}
+
+\begin{proposition}[Signature partition, P1]\label{prop:P1}
+Every $Z_s$ is constant on every elementary key interval, and
+$|\Sigma|\le N\le 1+\sum_sR_s$. Point location takes $O(\log N)$ time, and the bound on $N$
+is attained when all starts are distinct and positive.
+\end{proposition}
+\begin{proof}
+Every start of every zone map is a cut, so no zone map changes inside an elementary
+interval. Keys below $u_1=0$ do not occur. The cuts number at most $1+\sum_sR_s$, and
+$\Sigma$ is a set of interval labels. Binary search over the cuts locates an interval. If
+all starts are distinct and positive, all $1+\sum_sR_s$ cuts are distinct.
+\end{proof}
+
+\begin{lemma}[Group invariance, L2]\label{lem:L2}
+For all services $s,s'$ in the same group, $t_s(x)=t_{s'}(x)$ and
+$f_{\phi_s}(d)=f_{\phi_{s'}}(d)$ for every parcel. Hence the order of any list of services
+of one group by $(h,s)$ (Definition~\ref{def:hull}) does not depend on the fuel schedule,
+and a fuel edit changes no list of the index.
+\end{lemma}
+\begin{proof}
+The function $\tau_\gamma$ of Definition~\ref{def:program}(iv) reads only the parameters in
+$\gamma$, and the fuel ratio reads only $\phi\in\gamma$. The lists store $h$, which does
+not involve $f$.
+\end{proof}
+
+\begin{definition}[Elementary weight intervals]\label{def:elem}
+For a group $\gamma$, let $E_\gamma=\bigcup_{s\in\gamma}\{b_{s,1},\dots,b_{s,K_s}\}$ with elements
+$E_1<\dots<E_m$, and let $E_0=-\infty$ and $E_{m+1}=+\infty$. The elementary interval of a
+weight $t$ is $e_\gamma(t)=\min\{e\in\{1,\dots,m+1\}:E_e\ge t-\epsilon\}$.
+\end{definition}
+
+\begin{lemma}[Band--interval correspondence]\label{lem:band}
+Let $s\in\gamma$, let $t$ be a weight and let $e=e_\gamma(t)$. Then:
+\begin{enumerate}[label=(\alph*)]
+\item $\{k:b_{s,k}\ge t-\epsilon\}=\{k:b_{s,k}\ge E_e\}$. In particular, if this set is nonempty,
+then $k_s(t)=\min\{k:b_{s,k}\ge E_e\}$ and $b_{s,k_s(t)-1}<E_e\le b_{s,k_s(t)}$.
+\item $j_s(e):=\min\{k:b_{s,k}\ge E_e-\epsilon\}$ satisfies $j_s(e)\le k_s(t)$ whenever the set in
+(a) is nonempty.
+\item $e_\gamma$ and $k_s$ are nondecreasing, and $e_\gamma(\max(t,t'))=\max(e_\gamma(t),e_\gamma(t'))$.
+\item If the set in (a) is empty, then $t-\epsilon>b_{s,K_s}$.
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+(a) If $b_{s,k}\ge t-\epsilon$, then $b_{s,k}$ is an element of $E_\gamma$ that is at least
+$t-\epsilon$; since $E_e$ is the least such element, $b_{s,k}\ge E_e$. Conversely,
+$b_{s,k}\ge E_e\ge t-\epsilon$. For $e=m+1$ both sets are empty. The second claim follows
+because $k_s(t)$ is the least element of the set.
+(b) $b_{s,k}\ge E_e$ implies $b_{s,k}\ge E_e-\epsilon$.
+(c) Both functions are minima of sets that shrink as $t$ grows, and the identity follows
+from monotonicity.
+(d) If no breakpoint is at least $t-\epsilon$, then in particular $b_{s,K_s}<t-\epsilon$.
+\end{proof}
+
+\begin{definition}[Hull bound and lists]\label{def:hull}
+For $s\in\gamma$, a zone $z$ and $e\in\{1,\dots,m+1\}$, let
+\[
+h_s(z,e)=\begin{cases}
+\infty & z=\bot,\\
+\min_{k\ge j_s(e)}P_s[z,k] & e\le m \text{ and } j_s(e) \text{ is defined},\\
+P_s[z,K_s] & \text{otherwise, if $s$ extrapolates},\\
+\infty & \text{otherwise}.
+\end{cases}
+\]
+For $\sigma\in\Sigma_\gamma$ and $e$, the list $\mathcal L_\gamma(\sigma,e)$ contains all services of
+$\gamma$ sorted by $(h_s(\sigma_s,e),s)$. For a parcel $x$, let
+$z_s=Z_s(\kappa)$, $e_x=e_\gamma(t_\gamma(x))$ and $h_s(x)=h_s(z_s,e_x)$, and define the
+fuel-scaled bound
+\[
+\beta_s(x)=\fl{\frac{h_s(x)\,(10^4+f)+5000}{10^4}},\qquad \beta_s(x)=\infty\text{ if }h_s(x)=\infty.
+\]
+\end{definition}
+
+\begin{remark}
+For an extrapolating service and $e\le m$ with $j_s(e)$ defined, the implementation also
+takes the minimum with $P_s[z,K_s]$. This has no effect, because $K_s\ge j_s(e)$.
+\end{remark}
+
+\section{Lower Bound Correctness (L3)}\label{sec:L3}
+
+\begin{lemma}[Base bound]\label{lem:base}
+Assume \ref{as:nonneg}--\ref{as:extrap}. Let $s\in\gamma$ be eligible for $x$, and let $t''$ be
+any weight with $t''\le\hat t_s(x)$. Then $B_s(x)\ge h_s(z_s,e_\gamma(t''))$.
+\end{lemma}
+\begin{proof}
+Write $\hat t=\hat t_s(x)$, $e=e_\gamma(t'')$, $z=z_s\ne\bot$, $P=P_s[z,\cdot]$ and $K=K_s$. We
+first note a fact about extrapolation. If $s$ extrapolates and $\hat t>\lambda_s$, then
+$\hat t>b_{s,K}$ by \ref{as:extrap}, so $P[K]\hat t/b_{s,K}\ge P[K]$. Since $P[K]\le 10^{15}$
+by \ref{as:mag}, the minimum with $10^{15}$ is at least $P[K]$. Since $P[K]$ is an integer,
+$\lceil y-10^{-6}\rceil\ge P[K]$ for every $y\ge P[K]$. Hence
+\begin{equation}\label{eq:ext}
+B_s(x)\ge P[K]\qquad\text{whenever $s$ extrapolates and $\hat t>\lambda_s$.}
+\end{equation}
+\emph{Case 1: $e\le m$ and $j=j_s(e)$ is defined.} Then $h=\min_{k\ge j}P[k]$. If $s$
+extrapolates and $\hat t>\lambda_s$, then (\ref{eq:ext}) and $K\ge j$ give $B_s\ge P[K]\ge h$.
+Otherwise $B_s=P[k_s(\hat t)]$. If $\{k:b_{s,k}\ge t''-\epsilon\}$ is nonempty, then
+$j\le k_s(t'')\le k_s(\hat t)$ by Lemma~\ref{lem:band}(b),(c). If it is empty, then
+$k_s(\hat t)=K\ge j$, because $t''\le\hat t$ and the set for $\hat t$ is empty as well. In both
+cases $B_s=P[k_s(\hat t)]\ge\min_{k\ge j}P[k]=h$.
+
+\emph{Case 2: $e=m+1$, or $j_s(e)$ is undefined.} We claim $\hat t-\epsilon>b_{s,K}$. If
+$e=m+1$, then $E_m<t''-\epsilon$ and $b_{s,K}\le E_m$. If $e\le m$ and $j_s(e)$ is undefined,
+then $b_{s,K}<E_e-\epsilon<E_e$. Since $b_{s,K}\in E_\gamma$, we get $b_{s,K}\le E_{e-1}<t''-\epsilon$
+by the definition of $e$. In both cases $\hat t-\epsilon\ge t''-\epsilon>b_{s,K}$. Hence
+$\hat t>b_{s,K}$, and a non-extrapolating $s$ would be ineligible. So $s$ extrapolates and
+$h=P[K]$. If $\hat t>\lambda_s$, then (\ref{eq:ext}) applies. Otherwise no breakpoint is at
+least $\hat t-\epsilon$, so $k_s(\hat t)=K$ and $B_s=P[K]=h$.
+\end{proof}
+
+\begin{lemma}[Monotone rounding]\label{lem:round}
+For an integer $f$, let
+\[
+\eta_f(y)=\fl{\frac{y(10^4+f)+5000}{10^4}}.
+\]
+If $f\ge0$, then $\eta_f$ is nondecreasing on the integers and satisfies $\eta_f(y)\ge y$ for every integer $y\ge0$. Monotonicity also holds
+for every $f\ge-10^4$.
+\end{lemma}
+\begin{proof}
+For $f\ge-10^4$ the argument of the floor is nondecreasing in $y$, and the floor is
+nondecreasing. For $f\ge0$ and $y\ge0$ we have $y(10^4+f)+5000\ge 10^4y$.
+\end{proof}
+
+\begin{lemma}[Lower bound correctness, L3]\label{lem:L3}
+Assume \ref{as:nonneg}--\ref{as:extrap}. For every parcel $x$ and service $s$,
+\[
+h_s(x)\le\beta_s(x)\le c_s(x).
+\]
+In particular $h_s(x)=\infty$ implies $c_s(x)=\infty$. The first inequality uses $f\ge0$;
+the second needs only $f\ge-10^4$.
+\end{lemma}
+\begin{proof}
+If $s$ is ineligible, then $c_s=\infty$ and there is nothing to show. Otherwise apply Lemma~\ref{lem:base} with $t''=t_\gamma(x)\le\hat t_s(x)$;
+this holds because tiers only take maxima. It gives $B_s\ge h_s(x)$; since $B_s<\infty$ for an
+eligible service, $h_s(x)=\infty$ forces $c_s(x)=\infty$. All amounts are
+nonnegative by \ref{as:nonneg}. In particular, per-weight and percentage-of-base amounts
+are roundings of nonnegative numbers, so $\Sigma^\Fu,\Sigma^N\ge0$ and $Q\ge0$. By
+Lemma~\ref{lem:round},
+$c^0_s\ge\eta_f(B_s+\Sigma^\Fu)\ge\eta_f(h_s(x))=\beta_s(x)\ge h_s(x)$. Finally
+$c_s=c^0_s+\rnd{c^0_sQ/100}\ge c^0_s$, because the rounding of a nonnegative number is
+nonnegative.
+\end{proof}
+
+\subsection{Surcharge-class refinement (RQ+)}
+Call a predicate \emph{geometric for $\gamma$} if it reads only parcel-level features,
+or also $\mathit{DAS}$ when Assumption~\ref{as:das} holds for $\gamma$. Let $\Pi_\gamma$ be the
+set of geometric predicates that occur in the tiers, ineligibility predicates or
+surcharges of the services of $\gamma$. The class of $x$ is
+$C(x)=\{\pi\in\Pi_\gamma:\pi(x)\}$.
+
+\begin{definition}[Class key]\label{def:classkey}
+For $s\in\gamma$, a local signature $\sigma$ with $z=\sigma_s$, an interval $e$ and a class $C$,
+let $\hat e=\max\bigl(\{e\}\cup\{e_\gamma(m^{(j)}_s):\pi^{(j)}_s\in C\}\bigr)$. If $z=\bot$, if $\psi_s\in
+C$, or if $h_s(z,\hat e)=\infty$, set $\chi_s=\infty$. Otherwise
+\[
+\chi_s(\sigma,e,C)=h_s(z,\hat e)+\sum_{(g,\varphi)}\max\bigl(\{0\}\cup\{A_r[z]: r\in\mathcal
+R_s\text{ fixed},\ \pi_r\in C,\ (g_r,\varphi_r)=(g,\varphi)\}\bigr).
+\]
+Write $\chi_s=h_s(z,\hat e)+\chi^\Fu_s+\chi^N_s$, where $\chi^\Fu_s$ and $\chi^N_s$ sum over the
+fuel and non-fuel keys. The row is \emph{non-fuel-flagged} (NF) if some service with
+$\chi_s<\infty$ has $\chi^N_s>0$. The bound is $\beta^+_s=\chi_s$ for NF rows and
+$\beta^+_s=\eta_f(\chi_s)$ otherwise.
+\end{definition}
+
+\begin{lemma}[L3 for RQ+]\label{lem:L3plus}
+Assume \ref{as:nonneg}--\ref{as:extrap} and \ref{as:das}. For every $x$ and
+$s\in\gamma$, $\beta^+_s(\sigma(x),e_x,C(x))\le c_s(x)$.
+\end{lemma}
+\begin{proof}
+A geometric predicate has the same value in $C(x)$ and in the cost evaluation, because it
+reads only features that do not depend on the service; for $\mathit{DAS}$ this uses
+\ref{as:das}. If $\chi_s=\infty$ because of $z=\bot$ or $\psi_s\in C(x)$, then $s$ is
+ineligible. Let $t''=\max\bigl(\{t_\gamma\}\cup\{m^{(j)}_s:\pi^{(j)}_s\in C(x)\}\bigr)$. Every tier in
+$C(x)$ fires in the evaluation, so $t''\le\hat t_s(x)$. By Lemma~\ref{lem:band}(c),
+$e_\gamma(t'')=\hat e$. If $s$ is eligible, Lemma~\ref{lem:base} gives $B_s\ge h_s(z,\hat e)$, and
+in particular $h_s(z,\hat e)<\infty$. If $h_s(z,\hat e)=\infty$, the same lemma shows that $s$
+is ineligible. For every key, the maximum over all firing rules of the key is at least
+the maximum over its firing fixed geometric rules, since all amounts are nonnegative.
+Hence $\Sigma^\Fu\ge\chi^\Fu_s$ and $\Sigma^N\ge\chi^N_s$. For an NF row,
+$c_s\ge c^0_s\ge\eta_f(B_s+\Sigma^\Fu)+\Sigma^N\ge B_s+\Sigma^\Fu+\Sigma^N\ge\chi_s$. For a row that is
+not NF, every service with finite key has $\chi^N_s=0$, so
+$\eta_f(\chi_s)=\eta_f(h+\chi^\Fu_s)\le\eta_f(B_s+\Sigma^\Fu)\le c^0_s\le c_s$.
+\end{proof}
+
+\section{Query Exactness and Instance Optimality (T4)}\label{sec:T4}
+
+\begin{definition}[Threshold algorithm TA]\label{def:TA}
+On input $x$:
+\begin{enumerate}[leftmargin=*]
+\item Locate the elementary key interval of $\kappa$ and its signature $\sigma$. For every
+group $\gamma$, compute $t_\gamma(x)$, $e_x=e_\gamma(t_\gamma)$, the fuel ratio $f_\gamma$ and the
+list $\mathcal L_\gamma=\mathcal L_\gamma(\sigma|_\gamma,e_x)$. Set a pointer $p_\gamma$ to the first
+entry, and drop the group if its first entry has $h=\infty$.
+\item Set $(\mathit{best},\mathit{arg})=(\infty,-1)$. While some group remains: let $\gamma$ be
+a remaining group whose head has the smallest $\beta$. If $\beta_{\mathrm{head}}>\mathit{best}$,
+stop. Otherwise evaluate $v=c_s(x)$ for the head $s$, and replace
+$(\mathit{best},\mathit{arg})$ by $(v,s)$ if $v<\mathit{best}$, or if $v=\mathit{best}$ and
+$s<\mathit{arg}$. Advance $p_\gamma$, and drop $\gamma$ if its list is exhausted or its next
+entry has $h=\infty$.
+\item Return $(\mathit{best},\mathit{arg})$, where $(\infty,-1)$ encodes $\bot$.
+\end{enumerate}
+\end{definition}
+
+\begin{definition}[Access model]\label{def:access}
+An algorithm receives $x$ and the index. A \emph{sorted access} to a list returns the next
+entry $(s,h_s)$, from which $\beta_s(x)$ follows, at cost $c_S$. An \emph{evaluation} of $s$
+returns $c_s(x)$ at cost $c_R$. Nothing else about the costs is observable. The set of
+instances consistent with the bounds is
+$\mathcal I(\beta)=\{c'\in(\mathbb N\cup\{\infty\})^{\SC}: c'_s\ge\beta_s(x)\ \forall s\}$. An
+algorithm is \emph{correct} if every run returns $\min_{\mathrm{lex}}$ of the finite pairs of
+$c'$, or $\bot$, for every $c'\in\mathcal I(\beta)$. For randomized algorithms we require
+correctness of every run (Las Vegas). This is the sorted/random access model of threshold
+algorithms~\cite{fagin2003optimal}. As in minimal probing~\cite{chang2002minimal}, the
+grade of an entry is replaced by a lower bound and a probe reveals the exact value.
+\end{definition}
+
+\begin{theorem}[Exactness and instance optimality, T4]\label{thm:T4}
+Assume \ref{as:nonneg}--\ref{as:sid}, and let $(c^*,s^*)=\cfs(x)$.
+\begin{enumerate}[label=(\alph*)]
+\item TA returns $\cfs(x)$. It agrees with the brute force that scans the services in
+identifier order and keeps a strictly smaller cost, including the tie rule and the answer
+$\bot$.
+\item If $\cfs(x)\ne\bot$, TA evaluates exactly the services in
+$\{s:\beta_s(x)\le c^*\}$. If $\cfs(x)=\bot$, it evaluates exactly those with
+$\beta_s(x)<\infty$. It performs at most (number of evaluations)$+|\Gamma|$ sorted accesses.
+\item Let $M(x)=\{s:(\beta_s,s)\lexlt(c^*,s^*)\}\cup\{s^*\}$ if $\cfs(x)\ne\bot$, and
+$M(x)=\{s:\beta_s<\infty\}$ otherwise. Every run of every correct algorithm on any
+$c\in\mathcal I(\beta)$ with $\cfs=(c^*,s^*)$ evaluates every service of $M(x)$.
+\item Let $\tau(x)=|\{s>s^*:\beta_s(x)=c^*\}|$, and let $\tau(x)=0$ if $\cfs(x)=\bot$. TA makes
+exactly $|M(x)|+\tau(x)$ evaluations. For every correct algorithm $A$,
+\[
+\mathrm{cost}(\mathrm{TA},x)\le\Bigl(1+\frac{c_S}{c_R}\Bigr)\mathrm{cost}(A,x)+(c_R+c_S)\,\tau(x)+c_S|\Gamma|.
+\]
+Hence, on the inputs with $\tau(x)=0$, TA is instance optimal in the sense
+of~\cite{fagin2003optimal} with optimality ratio $1+c_S/c_R$ and additive constant
+$c_S|\Gamma|$, and its number of evaluations is the minimum over all correct algorithms. If
+only evaluations are counted, the optimality ratio is $1$ with additive term $\tau(x)$.
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+\emph{Order of pops.} Within a group, $\beta_s=\eta_f(h_s)$ with a common $f$
+(Lemma~\ref{lem:L2}). By Lemma~\ref{lem:round}, every list is therefore nondecreasing in
+$\beta$. TA always pops the smallest head, so the sequence of popped bounds is
+nondecreasing, as in a merge of sorted lists.
+
+\emph{Incumbent invariant.} After every step, $(\mathit{best},\mathit{arg})$ is the
+lexicographic minimum of the finite pairs of the evaluated services, or $(\infty,-1)$ if
+there is none. This holds initially. An infinite $v$ never replaces the incumbent: if
+$\mathit{best}=\infty$, then $\mathit{arg}=-1$ and $s<-1$ fails. A finite $v$ replaces it
+exactly when $(v,s)\lexlt(\mathit{best},\mathit{arg})$.
+
+(a) Consider the moment TA stops or runs out of groups. Let $s$ be an unevaluated
+service. Either $s$ lies after a dropped entry with $h=\infty$; then $h_s=\infty$ because the
+lists are sorted, and $c_s=\infty$ by Lemma~\ref{lem:L3}. Or $s$ lies in a remaining list;
+then $c_s\ge\beta_s\ge\beta_{\mathrm{head}}>\mathit{best}$. In both cases $(c_s,s)$ is not
+lexicographically smaller than the incumbent, so by the invariant the incumbent is the
+lexicographic minimum of all finite pairs, which is $\cfs(x)$. The brute force computes
+the same minimum: it scans in identifier order by \ref{as:sid}, and a strict comparison
+keeps the first, hence smallest, identifier among equal costs.
+
+(b) Let $\cfs(x)=(c^*,s^*)$. When TA stops, $\mathit{best}=c^*$ by (a). Every service
+with finite $h$ that was not evaluated lies in a remaining list and has
+$\beta_s>\mathit{best}=c^*$. If the loop ended because no group remained, every service with
+finite $h$ was evaluated. Hence every $s$ with $\beta_s\le c^*$ is evaluated. Conversely,
+let $\beta_s>c^*$. Since $\beta_{s^*}\le c_{s^*}=c^*<\beta_s$ and pops are nondecreasing,
+$s^*$ is popped and evaluated before $s$. From then on $\mathit{best}\le c^*$, and $\mathit{best}$
+is the cost of an evaluated service, so $\mathit{best}\ge c^*$. When $s$ becomes the
+smallest head, $\beta_s>\mathit{best}$ and TA stops. If $\cfs(x)=\bot$, then $\mathit{best}$
+stays $\infty$, the stop test never fires, and exactly the services with finite $h$,
+equivalently finite $\beta$, are evaluated. For the sorted accesses, each group reads its
+first entry once, and each evaluation is followed by at most one further read.
+
+(c) Suppose a run of a correct $A$ on $c$ never evaluates some $s\in M(x)$. Define $c'$ by
+$c'_u=c_u$ for $u\ne s$, and set $c'_s=\beta_s$ if $s\ne s^*$, or $c'_{s^*}=c^*+1$ if $s=s^*$. If
+$s\ne s^*$, then $\beta_s\le c^*<\infty$, or $\beta_s<\infty$ in the case $\cfs=\bot$, so $c'_s$ is
+finite. Thus $c'\in\mathcal I(\beta)$. Every sorted access and every evaluation of the run
+returns the same value under $c'$ as under $c$: the bounds are unchanged, and $s$ is never
+evaluated. Hence the run returns the same answer, $(c^*,s^*)$ or $\bot$. But the correct
+answer for $c'$ differs. If $s\ne s^*$ and $\cfs(x)\ne\bot$, then
+$(c'_s,s)=(\beta_s,s)\lexlt(c^*,s^*)$, so the minimum for $c'$ is strictly smaller. If
+$\cfs(x)=\bot$, then $c'$ has a finite pair. If $s=s^*$, every pair other than that of $s^*$
+is unchanged and differs from $(c^*,s^*)$, and the pair of $s^*$ is now $(c^*+1,s^*)$; so no
+pair equals $(c^*,s^*)$. This contradicts the correctness of $A$.
+
+(d) We have $(\beta_s,s)\lexlt(c^*,s^*)$ iff $\beta_s<c^*$, or $\beta_s=c^*$ and $s<s^*$. Moreover,
+$s^*$ belongs to the first set iff $\beta_{s^*}<c^*$. Hence
+$|M|=|\{\beta_s<c^*\}|+|\{\beta_s=c^*,s\le s^*\}|$, while by (b) TA evaluates
+$|\{\beta_s<c^*\}|+|\{\beta_s=c^*\}|=|M|+\tau$ services. Its cost is therefore at most
+$c_R(|M|+\tau)+c_S(|M|+\tau+|\Gamma|)$. By (c), $\mathrm{cost}(A,x)\ge c_R|M|$, which gives
+the inequality.
+\end{proof}
+
+\begin{remark}[Tie term]
+The term $\tau(x)$ is unavoidable for any algorithm that pops services in bound order and
+stops on a strict comparison. Sorting the lists by $(\beta,s)$ instead of $(h,s)$ does not
+remove it in general, because $\eta_f$ may map distinct $h$ to the same $\beta$, and a
+fuel-dependent order would contradict Lemma~\ref{lem:L2}. On instances where no other
+service has a bound exactly equal to the optimal cost, $\tau=0$ and TA is exactly optimal
+in evaluations.
+\end{remark}
+
+\begin{proposition}[RQ+ query]\label{prop:rqplus}
+Assume \ref{as:nonneg}--\ref{as:sid} and \ref{as:das}. TA run on the RQ+ rows, whose lists are
+sorted by $(\chi_s,s)$ with bound $\beta^+$, returns $\cfs(x)$. Statements (b)--(d) of
+Theorem~\ref{thm:T4} hold with $\beta^+$ in place of $\beta$.
+\end{proposition}
+\begin{proof}
+Within a row, $\beta^+$ is either $\chi$ or $\eta_f(\chi)$ with a common $f$, so the rows are
+nondecreasing in $\beta^+$. Lemma~\ref{lem:L3plus} replaces Lemma~\ref{lem:L3}, and a
+service with $\chi_s=\infty$ has $c_s=\infty$ by the proof of that lemma. The rest of the
+proof of Theorem~\ref{thm:T4} uses only these two properties.
+\end{proof}
+
+\begin{proposition}[Batch query]\label{prop:batch}
+Assume \ref{as:nonneg}--\ref{as:sid}. The vectorised algorithm, which in round $r$ evaluates
+the rank-$r$ entry of every group for every parcel that is still active in that group and
+deactivates a parcel in a group when the rank-$r$ bound is $\infty$ or exceeds the current
+best, returns $\cfs(x)$ for every parcel.
+\end{proposition}
+\begin{proof}
+The incumbent invariant holds because the lexicographic-minimum update is commutative
+and associative. A group is deactivated for a parcel at rank $r$ only if
+$\beta_r>\mathit{best}_{\mathrm{now}}\ge\mathit{best}_{\mathrm{final}}$ or $\beta_r=\infty$. All
+later ranks have bounds at least $\beta_r$, so their costs exceed the final best or are
+infinite. The argument of Theorem~\ref{thm:T4}(a) then applies.
+\end{proof}
+
+\begin{remark}[Truncated lists]
+With list truncation to the first $\kappa$ entries, the implementation evaluates all
+remaining services of a group when the truncated list is exhausted. Exactness is
+preserved, because unlisted services have bounds at least as large as the last listed
+bound. Statement (b) of Theorem~\ref{thm:T4} no longer holds. The surcharge-class index
+requires untruncated lists (Appendix~\ref{app:mismatch}, item M11).
+\end{remark}
+
+\section{Index Updates}\label{sec:updates}
+
+\begin{proposition}[Price edit]\label{prop:priceedit}
+After $P_s[z,k]\leftarrow v$, the in-place repair recomputes $h_s(z,\cdot)$, and for every
+local signature with $\sigma_s=z$ and every $e$ whose hull value changed, it removes $s$ and
+reinserts it at the first position whose entry is lexicographically after
+$(h^{\mathrm{new}},s)$. The resulting lists equal those of a fresh build. The repair takes
+$O(|\{\sigma\in\Sigma_\gamma:\sigma_s=z\}|\cdot|E^\Delta|\cdot n_\gamma+K_s+m_\gamma\log K_s)$ time
+with arrays, where $E^\Delta$ is the set of intervals whose hull value changed.
+\end{proposition}
+\begin{proof}
+The value $h_{s'}(z',e)$ depends only on $(s',z',e)$ and on the prices of $s'$. Hence only
+the entries of $s$ in lists with $\sigma_s=z$ can change, and only at intervals in
+$E^\Delta$. Removal followed by insertion at the stated position restores the order by
+$(h,s)$, which is strict because identifiers are distinct. The time bound counts the
+hull computation and one array shift per touched list.
+\end{proof}
+
+For RQ+, the edit invalidates the materialised rows of the local signatures with
+$\sigma_s=z$. These rows are rebuilt from the current data on their next access, so the
+answers remain exact by Proposition~\ref{prop:rqplus}. A fuel edit changes only the
+schedule, which takes $O(1)$ index work beyond the array insertion, by Lemma~\ref{lem:L2}.
+
+\begin{proposition}[Zone edit]\label{prop:zoneedit}
+After the edit $Z_s(\kappa)\leftarrow z'$ for $\kappa\in[l,u]$, the repair inserts the cuts $l$
+and $u+1$ and, for every elementary interval inside $[l,u]$, replaces its signature by the
+signature with $\sigma_s=z'$. Existing global and local signatures are reused, and new local
+signatures receive freshly built lists. For every key, the resulting index returns the
+same lists as a fresh build of the edited instance, so Theorem~\ref{thm:T4} continues to
+hold.
+\end{proposition}
+\begin{proof}
+Outside $[l,u]$ no zone map changes. The new cuts make every zone map constant on every
+elementary interval (Proposition~\ref{prop:P1}). A list depends only on the local zone vector
+and $e$, so reusing an existing local signature with the same vector, or building fresh
+lists from current data, yields the lists of a fresh build. A fresh build may number the
+signatures differently and merge adjacent intervals, which does not affect any answer.
+\end{proof}
+
+\section{Exact Maintenance (T7)}\label{sec:T7}
+
+\begin{definition}[Top-2 state]\label{def:top2}
+For a cost vector $c$ of a parcel, let $F(c)$ be the set of finite pairs. Then
+$\mathrm{Top2}(c)=(p_1,p_2)$, where $p_1=\min_{\mathrm{lex}}F(c)$ and
+$p_2=\min_{\mathrm{lex}}(F(c)\setminus\{p_1\})$; missing entries equal the padding
+$\bot=(\infty,-1)$, which we order after every finite pair. We write $p_i=(c_i,s_i)$.
+\end{definition}
+
+\begin{definition}[Repair]\label{def:repair}
+Given the state $(p_1,p_2)$ of a parcel, a service $s$ and its new cost $c'$, let
+$p=(c',s)$:
+\begin{enumerate}[label=(R\arabic*),leftmargin=*]
+\item $s=s_1$: if $c'<\infty$ and $p\lexlt p_2$, set $p_1\leftarrow p$; otherwise
+\emph{recompute}.
+\item $s=s_2$: if $p\lexlt p_1$, set $(p_1,p_2)\leftarrow(p,p_1)$; else if $c'\le c_2$, set
+$p_2\leftarrow p$; otherwise \emph{recompute}.
+\item $s\notin\{s_1,s_2\}$ and $c'<\infty$: if $p\lexlt p_1$, set $(p_1,p_2)\leftarrow(p,p_1)$;
+else if $p\lexlt p_2$, set $p_2\leftarrow p$; otherwise do nothing.
+\item $s\notin\{s_1,s_2\}$ and $c'=\infty$: do nothing.
+\end{enumerate}
+To \emph{recompute} means to set the state to $\mathrm{Top2}$ of the current costs of all
+services.
+\end{definition}
+
+\begin{lemma}[Single-service repair]\label{lem:repair1}
+Let $(p_1,p_2)=\mathrm{Top2}(c)$, and let $c'$ differ from $c$ at most in coordinate $s$. Then
+the repair with $c'_s$ yields $\mathrm{Top2}(c')$.
+\end{lemma}
+\begin{proof}
+We use the fact (F): every finite pair of $c$ other than $p_1,p_2$ is lexicographically
+after $p_2$. Pairs of services other than $s$ are the same under $c$ and $c'$.
+(R1) The pair of $s$ was $p_1$. If $c'<\infty$ and $p\lexlt p_2$, then $p$ precedes $p_2$ and,
+by (F), every other pair, so $\mathrm{Top2}(c')=(p,p_2)$. The other cases are recomputed.
+(R2) The pair of $s$ was $p_2=(c_2,s)$. If $p\lexlt p_1$, then $p\lexlt p_1\lexlt$ every other
+pair, so $\mathrm{Top2}(c')=(p,p_1)$. Otherwise $p_1\lexlt p$, since $p\ne p_1$. If moreover
+$c'\le c_2$, then $c'$ is finite and $p\lexle(c_2,s)$, which precedes every other pair by
+(F). Hence $\mathrm{Top2}(c')=(p_1,p)$. The remaining case is recomputed.
+(R3) The old pair of $s$, if finite, came after $p_2$. If $p\lexlt p_1$, then
+$\mathrm{Top2}(c')=(p,p_1)$. If $p_1\lexlt p\lexlt p_2$, then it is $(p_1,p)$. Otherwise $p$
+comes after $p_2$, and both the old and the new pair of $s$ come after $p_2$, so the state
+is unchanged.
+(R4) The pair of $s$ leaves $F$. It came after $p_2$, so the state is unchanged.
+\end{proof}
+
+\begin{lemma}[Several edited services]\label{lem:compose}
+Suppose that an edit changes the costs of $S_\Delta=\{u_1,\dots,u_r\}$ from $c$ to $c'$, and let all repairs and recomputations use $c'$. If each parcel is repaired once for
+each $u\in S_\Delta$, in any order, its final state is $\mathrm{Top2}(c')$.
+\end{lemma}
+\begin{proof}
+We prove the invariant that after the repairs for $u_1,\dots,u_i$, the state equals
+$\mathrm{Top2}(c^{(i)})$ for a vector $c^{(i)}$ with $c^{(i)}_u=c'_u$ for $u\notin S_\Delta$ and for
+$u\in\{u_1,\dots,u_i\}$. For $i=0$, take $c^{(0)}=c$, which agrees with $c'$ outside $S_\Delta$.
+For the step, if the repair for $u_{i+1}$ does not recompute, Lemma~\ref{lem:repair1}
+applied to $c^{(i)}$ and $c^{(i)}[u_{i+1}\leftarrow c'_{u_{i+1}}]$ yields the invariant. If it
+recomputes, the state becomes $\mathrm{Top2}(c')$, and $c^{(i+1)}=c'$ satisfies the
+invariant. For $i=r$ we have $c^{(r)}=c'$.
+\end{proof}
+
+\begin{definition}[Supports]\label{def:supports}
+Let $X$ be the historical parcels, $t_\gamma(x)$ their pre-tier weights and
+$e_x=e_\gamma(t_\gamma(x))$. A \emph{bucket} $(\sigma,e)$ is the set of parcels whose signature
+is $\sigma$ and whose interval in the group of the edited service is $e$.
+\begin{enumerate}[label=(S\arabic*),leftmargin=*]
+\item \emph{Cell $(s,z,k)$.} Let $\bar b=b_{s,k}$, except $\bar b=+\infty$ if $s$
+extrapolates and $k=K_s$. Let $I_k=\{e\in\{1,\dots,m+1\}:b_{s,k-1}<E_e\le\bar b\}$. Then
+\[
+U_{\mathrm{cell}}=\{x:Z_s(\kappa)=z,\ e_x\in I_k\}\cup\bigcup_{j:\ b_{s,k-1}<m^{(j)}_s\le\bar b}\{x:Z_s(\kappa)=z,\ \pi^{(j)}_s(x)\}.
+\]
+\item \emph{Band $(s,k)$ over zones $Z'$, or any set of cells of one service.} The union of
+the cell supports.
+\item \emph{Table rewrite of $s$, such as a general rate increase.}
+$U_{\mathrm{srv}}=\{x:Z_s(\kappa)\ne\bot\}$.
+\item \emph{Rule edit of $s$}, which changes $\mathcal R_s$ or $\psi_s$ but not zones, prices,
+the group or the tiers. If $\psi_s$ changes, or if a changed rule is a
+percentage-of-total rule, the support is $U_{\mathrm{srv}}$. Otherwise, let $\Delta\mathcal R$ be
+the symmetric multiset difference of the old and the new rule lists, comparing all fields
+of a rule. Then
+$U_{\mathrm{rule}}=\{x\in U_{\mathrm{srv}}:\exists r\in\Delta\mathcal R,\ \pi_r(x)\}$, where $\pi_r$
+is evaluated as in Definition~\ref{def:cost}.
+\item \emph{Zone edit} $Z_s(\kappa)\leftarrow z'$ for $\kappa\in[l,u]$:
+$U_{\mathrm{zone}}=\{x:\kappa\in[l,u],\ Z^{\mathrm{old}}_s(\kappa)\ne z'\}$.
+\item \emph{Fuel edit} of class $\phi$, segment $w$: let $D_w=[\sigma_{\phi,w},\sigma_{\phi,w+1})$,
+with $\sigma_{\phi,0}$ replaced by $-\infty$ for $w=0$ and $\sigma_{\phi,W}=+\infty$. Then
+$U_{\mathrm{fuel}}=\{x:d(x)\in D_w\}$, and $S_\Delta=\{u:\phi_u=\phi\}$. Inserting a new start
+$\sigma'$ into segment $w$ gives the support $\{x:d(x)\in[\sigma',\sigma_{\phi,w+1})\}$.
+\item \emph{Service insertion or deletion:} $U_{\mathrm{srv}}$, with the cost of the inserted
+service before the edit, or of the deleted service after it, taken as $\infty$.
+\end{enumerate}
+\end{definition}
+
+\begin{lemma}[Cell support]\label{lem:cellsupport}
+Assume \ref{as:extrap}, \ref{as:tier} and \ref{as:spacing}. If $c_s(x)$ changes when only
+$P_s[z,k]$ changes, then $x\in U_{\mathrm{cell}}$.
+\end{lemma}
+\begin{proof}
+The cost reads the price table only through $B_s$, which is also the only input of
+percentage-of-base amounts. $B_s$ reads $P_s[z,k]$ only if $Z_s(\kappa)=z$ and either (i)
+$k_s(\hat t)=k$ and $s$ does not extrapolate at $x$, or (ii) $s$ extrapolates with
+$\hat t>\lambda_s$ and $k=K_s$. Let $t=t_\gamma(x)$. By \ref{as:tier}, firing of tiers does not
+depend on $T$, so $\hat t=\max(\{t\}\cup\{m^{(j)}_s:\pi^{(j)}_s(x)\})$.
+
+\emph{Case $\hat t=t$.} In case (i), if some breakpoint is at least $t-\epsilon$,
+Lemma~\ref{lem:band}(a) gives $b_{s,k-1}<E_{e_x}\le b_{s,k}\le\bar b$, so $e_x\in I_k$.
+Otherwise $k_s(t)=K_s=k$ and $t-\epsilon>b_{s,K_s}$ by Lemma~\ref{lem:band}(d). Then a
+non-extrapolating $s$ is ineligible both before and after the edit, so its cost cannot
+change. If $s$ extrapolates, then $\bar b=\infty$ and $E_{e_x}\ge t-\epsilon>b_{s,K_s}-\epsilon\ge
+b_{s,K_s-1}$; for $e_x=m+1$ this holds trivially, and otherwise it uses \ref{as:spacing}. So
+$e_x\in I_{K_s}$. In case (ii), $t>\lambda_s\ge b_{s,K_s}$ by \ref{as:extrap}, and the same
+argument gives $e_x\in I_{K_s}$.
+
+\emph{Case $\hat t>t$.} Then $\hat t=m^{(j)}_s$ for a firing tier $j$. In case (i),
+$k_s(m^{(j)}_s)=k$ means $b_{s,k-1}<m^{(j)}_s-\epsilon$ and, if $k<K_s$ or no clipping occurs,
+$m^{(j)}_s-\epsilon\le b_{s,k}$. Hence $b_{s,k-1}<m^{(j)}_s$, and $m^{(j)}_s\le b_{s,k}+\epsilon$,
+which together with \ref{as:tier} gives $m^{(j)}_s\le b_{s,k}$. If clipping occurs, then
+$k=K_s$, and either $s$ extrapolates and $\bar b=\infty$, or $s$ is ineligible both before
+and after the edit. In case (ii), $m^{(j)}_s>\lambda_s\ge b_{s,K_s}>b_{s,K_s-1}$ and
+$\bar b=\infty$. In every case $b_{s,k-1}<m^{(j)}_s\le\bar b$, and $x$ belongs to the tier
+term of $U_{\mathrm{cell}}$, because by \ref{as:tier} the tier predicate evaluated without
+service-dependent features agrees with the evaluation.
+\end{proof}
+
+\begin{lemma}[Other supports]\label{lem:othersupports}
+If the costs change on parcel $x$ under an edit of type (S2)--(S7), then $x$ lies in the
+corresponding support.
+\end{lemma}
+\begin{proof}
+(S2) A set of cells of one service changes $c_s(x)$ only if one of the cells is read at
+$x$; apply Lemma~\ref{lem:cellsupport} to each cell. (S3) If $Z_s(\kappa)=\bot$, then
+$c_s(x)=\infty$ before and after the edit. (S4) The zones, $\hat t$ and $B_s$ are unchanged.
+If $x$ is in no support, then no rule of $\Delta\mathcal R$ fires at $x$. The firing rules at $x$,
+with their amounts and keys, are then the same before and after the edit, because the
+unchanged rules are identical and the changed ones do not fire. Since every
+$\mu_{g,\varphi}$ is a maximum over firing rules and $\psi_s$ is unchanged,
+(\ref{eq:cost}) is unchanged. (S5) $c_s$ reads $\kappa$ only through $Z_s(\kappa)$, which also
+supplies the $\mathit{ZONE}$ feature, and through $\mathit{DAS}_s(\kappa)$, which is
+unchanged. (S6) $f_\phi(d)$ changes exactly for $d\in D_w$, and the edit changes no other
+input of any service. (S7) A service with $Z_s=\bot$ has cost $\infty$ before and after.
+\end{proof}
+
+\begin{theorem}[Exact maintenance, T7]\label{thm:T7}
+Let an edit $\Delta$ change the services in $S_\Delta$, and let
+$D_\Delta=\{x\in X:\exists u\in S_\Delta,\ c_u(x)\ne c'_u(x)\}$. For every $U$ with
+$D_\Delta\subseteq U\subseteq X$, repairing every $x\in U$ once for each $u\in S_\Delta$, in any
+order and with the edited instance, makes the state of every $x\in X$ equal to
+$\mathrm{Top2}(c'(x))$. Under \ref{as:extrap}, \ref{as:tier} and \ref{as:spacing}, the
+supports of Definition~\ref{def:supports} contain $D_\Delta$. The repair evaluates
+$|S_\Delta|\cdot|U|$ costs and recomputes the set $R\subseteq U$ of parcels that reach a
+recompute branch, at a cost of $|\SC|$ evaluations each. A parcel reaches a recompute branch only if the edited service was its best and became
+infeasible or lexicographically worse than the runner-up (R1), or was its runner-up and
+became more expensive than before without overtaking the best (R2).
+\end{theorem}
+\begin{proof}
+For $x\notin U$, all costs are unchanged, so the old state equals $\mathrm{Top2}(c'(x))$. For
+$x\in U$, apply Lemma~\ref{lem:compose}. The containment of the supports is
+Lemmas~\ref{lem:cellsupport} and~\ref{lem:othersupports}. The cost statement counts one
+evaluation per parcel and service, plus one full recomputation per element of $R$. The
+characterisation of $R$ follows from (R1) and (R2).
+\end{proof}
+
+\begin{remark}[Granularity]
+$U_{\mathrm{cell}}$ is a union of whole buckets plus tier sets. A parcel in a selected bucket whose tier moves it out of band $k$, or for which $s$ is
+ineligible, is included although its cost does not change; its repair is a no-op.
+Exactness never depends on minimality.
+\end{remark}
+
+\section{Complexity}\label{sec:complexity}
+
+Let $n=|\SC|$, $N\le 1+\sum_sR_s$ the number of elementary key intervals, $\Gamma$ the set of
+groups, $n_\gamma$ the size of group $\gamma$, $m_\gamma=|E_\gamma|\le\sum_{s\in\gamma}K_s$,
+$\Sigma_\gamma$ the local signatures, and $Z^\gamma_s$ the number of distinct zones of $s$ that
+occur in $\Sigma_\gamma$. Let $C_{\mathrm{ev}}(s)$ be the cost of one evaluation, which is
+$O(\log R_s+\log K_s+\log|\mathit{DAS}_s|+\sum_{r}|\pi_r|+|\pi^{(\cdot)}_s|+|\psi_s|)$, where $|\pi|$
+is the number of conditions of a predicate.
+
+\begin{proposition}[Build, space, query and maintenance cost]\label{prop:complexity}
+\begin{enumerate}[label=(\alph*)]
+\item \emph{Build:} the index is built in time
+\[
+O\Bigl(nN\log N+\sum_\gamma\Bigl[\sum_{s\in\gamma}Z^\gamma_s(K_s+m_\gamma\log K_s)+|\Sigma_\gamma|(m_\gamma+1)\,n_\gamma\log n_\gamma\Bigr]\Bigr).
+\]
+\item \emph{Space:} $O\bigl(N+n|\Sigma|+\sum_\gamma|\Sigma_\gamma|(m_\gamma+1)\,n_\gamma\bigr)$ words. RQ+ adds
+$O(n_\gamma)$ words per materialised row $(\sigma,e,C)$, and the number of such rows never
+exceeds the number of distinct triples $(\sigma|_\gamma,e_x,C(x))$ among the queried parcels.
+\item \emph{Query (TA):} $O\bigl(\log N+\sum_\gamma(C_\tau+\log m_\gamma)+N_{\mathrm{TA}}(x)\,(|\Gamma|+C_{\mathrm{ev}})\bigr)$,
+where $C_\tau$ is the cost of computing $t_\gamma$ and $N_{\mathrm{TA}}(x)=|\{s:\beta_s(x)\le c^*\}|$ by
+Theorem~\ref{thm:T4}(b). With a heap over the group heads, the factor $|\Gamma|$ becomes
+$\log|\Gamma|$.
+\item \emph{Maintenance:} initialisation takes $O(|X|\,\sum_sC_{\mathrm{ev}}(s)+|\Gamma|\,|X|\log|X|)$.
+Enumerating $U_{\mathrm{cell}}$ takes $O(|\{\sigma:\sigma_s=z\}|\cdot|I_k|+|U|\log|U|)$ given the
+cached tier sets. The repair costs $|U|$ evaluations of $s$ plus $|R|\cdot n$ evaluations.
+\end{enumerate}
+\end{proposition}
+\begin{proof}
+(a) Computing the zone vectors takes $n$ binary searches per elementary interval, and
+deduplication is a sort of $N$ vectors of length $n$. For every service and every distinct
+zone, the suffix minimum takes $O(K_s)$, and locating the $m_\gamma$ intervals takes
+$O(m_\gamma\log K_s)$. Sorting takes $O(n_\gamma\log n_\gamma)$ per list.
+(b) Count the stored arrays.
+(c) Point location and the per-group set-up are followed, for each evaluated service, by
+one selection among at most $|\Gamma|$ heads and one evaluation; the number of pops is
+$N_{\mathrm{TA}}$.
+(d) The initial top-2 evaluates every service on every parcel, and the buckets are sorted
+once per group. Enumeration performs one dictionary lookup per candidate bucket and
+deduplicates the result.
+\end{proof}
+
+\section{Envelope Complexity and General Predicates (T5, T6)}\label{sec:T5T6}
+
+Throughout this section, fix a group $\gamma$, a local signature, the fuel ratio and the
+values of all predicates. Assume that all surcharges are fixed amounts and that no
+service extrapolates. Then $c_s(x)$ depends on the weight only through $k_s(\hat t_s)$.
+Define the \emph{restricted fragment} by the additional condition that no tier fires,
+so that $\hat t_s=t_\gamma$.
+
+\begin{proposition}[One-dimensional envelope, T5 part 1]\label{prop:T5a}
+In the restricted fragment, the map $t\mapsto\cfs$ restricted to $\gamma$ is constant on each
+elementary interval $\{t:e_\gamma(t)=e\}$, so it has at most $m_\gamma+1\le\sum_{s\in\gamma}K_s+1$
+pieces. The bound $m_\gamma+1$ is attained for every $m_\gamma$.
+\end{proposition}
+\begin{proof}
+By Lemma~\ref{lem:band}(a), $k_s(t)$ is determined by $e_\gamma(t)$ for every $s\in\gamma$, so all
+costs are constant on each elementary interval. For tightness, take services
+$s_1,\dots,s_m$ with $s_1$ having the single breakpoint $1$ and price $1$, and $s_i$ for
+$i\ge2$ having breakpoints $i-1,i$ and prices $3,1$. On $(i-1,i]$ the service $s_i$ costs
+$1$, every $s_{i'}$ with $i'>i$ costs $3$, and every $s_{i'}$ with $i'<i$ is ineligible. Hence
+the argmin is $s_i$ on $(i-1,i]$, and $\bot$ on $(m,\infty)$. This gives $m+1$ pieces with
+$E_\gamma=\{1,\dots,m\}$.
+\end{proof}
+
+\begin{proposition}[Two-dimensional overlay, T5 part 2]\label{prop:T5b}
+For every rounding rule, $t_\gamma(a,V)=\max(\alpha_\gamma(a),\nu_\gamma(V))$ with nondecreasing
+$\alpha_\gamma,\nu_\gamma$. Hence, across all groups in the restricted fragment, the plane
+$(a,V)$ is partitioned into at most $O(\Lambda^2)$ cells on which every cost is constant,
+where $\Lambda=\sum_\gamma(m_\gamma+1)$. There are instances with two groups where the overlay
+has $\Omega(\Lambda^2)$ cells.
+\end{proposition}
+\begin{proof}
+For the carrier rule, $\alpha(a)=a$ and $\nu(V)=[V>\theta]V/D$. For the erp-style rule, the
+rounding of $a$ and of $V$ are applied separately and then maximised. For the enterprise
+rule in mode $1$, $r(\max(a,v))=\max(r(a),r(v))$ because $r$ is nondecreasing; modes $2$
+and $3$ are the special cases with a constant $\nu$ or $\alpha$. Hence
+$\{t_\gamma\le w\}=\{\alpha(a)\le w\}\cap\{\nu(V)\le w\}$ is a down-closed axis-parallel
+rectangle, and the boundary between consecutive elementary intervals consists of at
+most one vertical and one horizontal segment or ray. The overlay of all groups is
+therefore an arrangement of at most $2\Lambda$ axis-parallel segments. Such an arrangement
+has $O(\Lambda^2)$ vertices and hence, by Euler's formula, $O(\Lambda^2)$
+faces~\cite{deberg2008computational}. Every cost is constant on each face.
+
+For the lower bound, take two carrier groups with $\theta=0$, divisors $D_1>D_2$ with
+$D_1/D_2>2K$, and $E_1=E_2=\{1,\dots,K\}$. In the wedge $V/D_1<a<V/D_2$ we have
+$t_1=a$ and $t_2=V/D_2$. For $1\le i<j\le K$, the point $(i-\tfrac12,(j-\tfrac12)D_2)$ lies in
+the wedge, because $(j-\tfrac12)D_2/D_1<1/2\le i-\tfrac12<j-\tfrac12$. Its pair of intervals is
+$(i,j)$. Hence at least $K(K-1)/2=\Omega(\Lambda^2)$ distinct cells occur.
+\end{proof}
+
+\begin{conjecture}[T5 lower bound for the argmin]\label{conj:T5}
+There are instances in the restricted fragment where the number of maximal connected
+regions of the $(a,V)$ plane with a constant argmin is $\Omega(\Lambda^2)$.
+\end{conjecture}
+Proposition~\ref{prop:T5b} shows this lower bound for the overlay of cells, not for the
+argmin. With one service per group, the argmin regions are separated by a threshold on
+the two price sequences, and a checkerboard pattern of the argmin is impossible. A
+construction with $\Theta(K)$ services per group is a plausible route.
+
+\begin{proposition}[Class counts, T6 part 1]\label{prop:T6a}
+(a) If the predicates of $\gamma$ are conjunctions and disjunctions of threshold conditions
+on the parcel-level features, with $h_\ell$ distinct thresholds on feature $\ell$ and $g_c$
+distinct values that matter for categorical feature $c$, then
+$|\{C(x)\}|\le\prod_\ell(h_\ell+1)\prod_cg_c$.
+(b) If the predicates are $H$ halfspaces in $\mathbb R^d$ in general position, then the
+number of classes is at least $\sum_{i=0}^{d}\binom Hi=\Theta(H^d)$ for fixed $d$. Every index that
+materialises one row per class eagerly therefore needs $\Omega(H^d)$ rows.
+\end{proposition}
+\begin{proof}
+(a) A class is determined by the cell of the grid of thresholds and by the categorical
+values, because every condition is constant on each grid cell. (b) Distinct full-dimensional
+cells of the arrangement have distinct sign vectors, and their number is
+$\sum_{i\le d}\binom Hi$~\cite{buck1943partition,zaslavsky1975facing}.
+\end{proof}
+
+\begin{conjecture}[T6]\label{conj:T6}
+For general linear predicates in $d$ dimensions, there is no exact CFS index of size
+polynomial in $H$ and $n$, independent of $d$, that answers queries with
+$o(n)$ evaluations in the worst case.
+\end{conjecture}
+Proposition~\ref{prop:T6a}(b) excludes only eager per-class materialisation, which is the
+design that RQ+ avoids by building rows lazily. A general lower bound would require a
+cell-probe argument, which we do not claim.
+
+\appendix
+\section{Correspondence with the Code}\label{app:code}
+
+Line numbers refer to the code as of 2026-11-09, in \code{code/rateq/} unless stated
+otherwise.
+
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.34\textwidth}>{\raggedright\arraybackslash}p{0.58\textwidth}}
+\toprule
+Theory & Implementation \\
+\midrule
+\endhead
+Zone map $Z_s$ (Def.~\ref{def:program}(i)) & \code{model.py:151-154} \code{zone\_of}; scalar \code{index.py:78-83} \\
+Billable weight $\tau_\gamma$ & \code{model.py:216-231} \code{billable}; \code{index.py:58-73} \code{billable1} \\
+Group key $\gamma(s)$ & \code{model.py:147-149} \code{group\_key} \\
+Tiers, lower first & \code{model.py:142-145} \code{min\_tiers}, \code{model.py:243-245}, \code{index.py:92-95} \\
+Band $k_s$ with $\epsilon=10^{-9}$ & \code{model.py:255-256}, \code{index.py:103-105} \\
+Extrapolation with cap & \code{model.py:249-263}, \code{index.py:99-112} \\
+Eligibility & \code{model.py:246-248, 254, 264}, \code{index.py:78-114} \\
+Surcharges, keys, maxima & \code{model.py:269-288}; \code{index.py:115-137} \\
+Cost (\ref{eq:cost}) & \code{model.py:289-293}; \code{index.py:138-144} \\
+CFS, brute force & \code{model.py:299-309}, \code{index.py:159-165} \\
+Key partition, signatures & \code{index.py:182-193} \\
+$E_\gamma$, hull $h$, lists & \code{index.py:200, 207-222, 224-244} \\
+TA (Def.~\ref{def:TA}) & \code{index.py:258-299}; stop test \code{index.py:277} \\
+Batch (Prop.~\ref{prop:batch}) & \code{index.py:301-358} \\
+Price and zone edits & \code{index.py:361-393, 407-458} \\
+Class key $\chi$, NF flag & \code{index.py:552-586}; geometric features \code{index.py:461-470} \\
+RQ+ TA & \code{index.py:602-637}, \code{index.py:639-696} \\
+Top-2, repair (R1)--(R4) & \code{maintain.py:21-32, 94-126} \\
+$U_{\mathrm{cell}}$, $U_{\mathrm{srv}}$, $U_{\mathrm{fuel}}$ & \code{maintain.py:64-84, 86-88, 90-92} \\
+$U_{\mathrm{rule}}$ & \code{code/erp\_pilot.py:160, 171-185, 196-204} \\
+\bottomrule
+\end{longtable}
+
+\paragraph{Branch equivalence of the repair.} The code encodes $\bot$ as $(\infty,-1)$, and its
+comparison treats $(\infty,-1)$ as smaller than $(\infty,s)$ for $s\ge0$. Every branch
+nevertheless coincides with Definition~\ref{def:repair}. For $s=s_1$, the code keeps $p$ iff
+$\neg((c_2,s_2)\lexlt(c',s))$. If $c'=\infty$, this is false whether or not $p_2$ is the
+padding, so the code recomputes, as in (R1). For $s=s_2$, the promotion test
+$(c',s)\lexlt(c_1,s_1)$ is false for $c'=\infty$, because $c_1$ is finite, and
+$c'\le c_2$ is false as well, so the code recomputes. For other services with $c'=\infty$,
+both tests are false, as in (R4).
+
+\paragraph{Assumption check.} A scan of the compiled instances (the public cards, their
+scaled variants, the synthetic and erp-style generators, and the enterprise US
+instance) found no violation of \ref{as:nonneg}--\ref{as:das}. In detail: no negative price,
+amount, coefficient or fuel ratio; no extrapolating service with $\lambda_s<b_{s,K_s}$; the
+identifier of every service equals its position; no tier predicate reads $T$,
+$\mathit{ZONE}$, $\mathit{ZIP}$ or $\mathit{DAS}$; no tier minimum lies within $\epsilon$
+above a breakpoint; and every group that shares a delivery-area start array also shares
+the level array.
+
+\section{Code--Theory Discrepancies}\label{app:mismatch}
+
+None of the following items invalidates a reported result. Each is either a latent
+precondition that holds on all instances, or a superset that affects only efficiency.
+
+\begin{enumerate}[label=M\arabic*,leftmargin=*]
+\item \textbf{Stop rule and ties} (\code{index.py:277, 622}). The strict test
+$\beta_{\mathrm{head}}>\mathit{best}$ evaluates all services with bound equal to $c^*$. This is
+correct and gives the additive term $\tau(x)$ of Theorem~\ref{thm:T4}(d). The research plan
+claims that every certificate-producing algorithm must evaluate
+$|\{s:\beta_s\le c^*\}|$ services; the correct lower bound is $|M(x)|$, which is smaller by
+$\tau(x)$.
+\item \textbf{One extra interval in $U_{\mathrm{cell}}$} (\code{maintain.py:69}). The condition
+$E_{e-1}<\mathit{hi}+10^{-12}$ admits the interval directly after $b_{s,k}$, so the code
+enumerates $I_k\cup\{e_{\mathit{hi}}+1\}$. This is a sound superset that slightly enlarges
+$U$.
+\item \textbf{Tier band test} (\code{maintain.py:79}) uses $\mathit{lo}<m\le\mathit{hi}$ without
+$\epsilon$. It is equivalent to the $\epsilon$-band membership under the second part of
+\ref{as:tier}.
+\item \textbf{Tier masks} (\code{maintain.py:56-62}) evaluate the tier predicate with the
+pre-tier $T$, with $\mathit{ZONE}=0$, and with a cache keyed by the identity of the
+predicate object, which is shared across services. They are exact only under the first
+part of \ref{as:tier}. A tier predicate that reads $T$, such as an oversize test that
+depends on the raised weight, would require evaluating the masks per service in tier
+order.
+\item \textbf{Stale signatures after zone edits.} The locations are
+\code{maintain.py:40-52} and \code{index.py:407-450}. The maintainer class computes the parcel signatures and
+the buckets only once. After \code{RQIndex.update\_zone}, \code{support\_cell} would read the old
+signatures and could miss parcels whose new zone equals $z$. There is also no Q3 routine
+for zone edits; the theory supplies $U_{\mathrm{zone}}$ (S5). The pilots never interleave
+zone edits with Q3, so their results are unaffected. A fix is to rebuild \code{sg} and the
+buckets of the affected keys after a zone edit.
+\item \textbf{Fuel support at the ends of the schedule.} Location:
+\code{code/pilot.py:239-240} and \code{maintain.py:90-92}. The support $[\sigma_w,\sigma_{w+1}-1]$ is exact for
+$1\le w\le W-2$. For $w=0$ it misses days before $\sigma_0$, which also use $f_{\phi,0}$
+(\code{model.py:172}). For $w=W-1$ it raises an index error. The pilot selects $w=0$ only
+for schedules with at most two segments, and all fuel classes of the instances have more,
+so its results are unaffected.
+\item \textbf{Rule-level support} (\code{code/erp\_pilot.py:160, 171-185}). The features use
+only the upper tier \code{oversize}, not \code{oversize2} and not the tier order, and the
+rule identity \code{rkey} omits the fuel flag. Both are sound on the enterprise data,
+which has no tiers and only rules without fuel, but they violate (S4) in general.
+\item \textbf{Negative amounts} (\code{index.py:131} vs.\ \code{model.py:283}). The scalar
+evaluator initialises group maxima with $-1$, so a group with only negative amounts
+contributes $0$, whereas the vector evaluator contributes the negative maximum. The two
+coincide under \ref{as:nonneg}.
+\item \textbf{Extrapolation limit} (\code{index.py:217-221}). The hull assumes
+\ref{as:extrap}. If $\lambda_s<b_{s,K_s}$, a parcel with $\hat t\in(\lambda_s,b_{s,K_s}]$ has
+$B_s=\lceil P_s[z,K_s]\hat t/b_{s,K_s}\rceil$, which may be below $h$, and Lemma~\ref{lem:L3}
+would fail. A guard that rejects such services at build time is advisable.
+\item \textbf{Shared delivery areas} (\code{index.py:486-487}). The flag \code{das\_ok}
+compares only the identity of the start arrays, not of the level arrays
+(\ref{as:das}).
+\item \textbf{RQ+ with truncation} (\code{index.py:502-503}). The unsorted hull is recovered
+from the possibly truncated lists, so RQ+ requires \code{kappa=None}, which is the default.
+\item \textbf{Documentation} (\code{model.py:9-12}, \code{index.py:474-476}). The docstrings
+claim upward-closed predicates and monotone cost, and list only $L,M,S,G,V,A$ as
+geometric features, whereas \code{GEOM} also contains $\mathit{res}$, $L+M+S$, day and
+month. The proofs use neither monotonicity nor the shorter list, so only the
+documentation is outdated.
+\end{enumerate}
+
+\begin{thebibliography}{9}
+\bibitem{fagin2003optimal}
+R.~Fagin, A.~Lotem, and M.~Naor, ``Optimal aggregation algorithms for middleware,''
+\emph{J. Comput. Syst. Sci.}, vol.~66, no.~4, pp.~614--656, 2003.
+\bibitem{chang2002minimal}
+K.~C.-C. Chang and S.-w. Hwang, ``Minimal probing: Supporting expensive predicates for
+top-k queries,'' in \emph{Proc. ACM SIGMOD}, 2002, pp.~346--357.
+\bibitem{buck1943partition}
+R.~C. Buck, ``Partition of space,'' \emph{Amer. Math. Monthly}, vol.~50, no.~9,
+pp.~541--544, 1943.
+\bibitem{zaslavsky1975facing}
+T.~Zaslavsky, ``Facing up to arrangements: Face-count formulas for partitions of space
+by hyperplanes,'' \emph{Mem. Amer. Math. Soc.}, vol.~1, no.~154, 1975.
+\bibitem{deberg2008computational}
+M.~de~Berg, O.~Cheong, M.~van~Kreveld, and M.~Overmars, \emph{Computational Geometry:
+Algorithms and Applications}, 3rd~ed. Springer, 2008.
+\end{thebibliography}
+
+\end{document}
