@@ -1,0 +1,7 @@
+{
+ "_comment": "Aggregate of the company's 2026 US warehouses (read-only warehouse query; only these four numbers are published).",
+ "us_warehouses": 23,
+ "share_2026_us_parcels_on_channels_with_US_card": 0.8401,
+ "channels_ge1pct_median": 6,
+ "channels_ge1pct_max": 12
+}

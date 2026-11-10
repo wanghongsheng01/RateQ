@@ -620,7 +620,11 @@ is unchanged.
 
 \begin{lemma}[Several edited services]\label{lem:compose}
 Suppose that an edit changes the costs of $S_\Delta=\{u_1,\dots,u_r\}$ from $c$ to $c'$, and let all repairs and recomputations use $c'$. If each parcel is repaired once for
-each $u\in S_\Delta$, in any order, its final state is $\mathrm{Top2}(c')$.
+each $u\in S_\Delta$, in any order, its final state is $\mathrm{Top2}(c')$. The same holds with
+\emph{deferred recomputation}: a parcel that reaches a recompute branch is only marked, and
+the remaining repairs for it are applied to its current state (or skipped). After all
+services of $S_\Delta$ have been processed, every marked parcel is recomputed once. This
+recomputation may reuse the already evaluated costs $c'_u(x)$ for $u\in S_\Delta$.
 \end{lemma}
 \begin{proof}
 We prove the invariant that after the repairs for $u_1,\dots,u_i$, the state equals
@@ -630,6 +634,14 @@ For the step, if the repair for $u_{i+1}$ does not recompute, Lemma~\ref{lem:rep
 applied to $c^{(i)}$ and $c^{(i)}[u_{i+1}\leftarrow c'_{u_{i+1}}]$ yields the invariant. If it
 recomputes, the state becomes $\mathrm{Top2}(c')$, and $c^{(i+1)}=c'$ satisfies the
 invariant. For $i=r$ we have $c^{(r)}=c'$.
+
+For deferred recomputation, an unmarked parcel has gone only through non-recompute
+repairs, so the invariant above holds for it at every step, and its final state is
+$\mathrm{Top2}(c')$. A marked parcel is finally set to $\mathrm{Top2}(c')$ by a recomputation
+over all services with the edited instance, which does not read the intermediate state. A
+recomputation that takes $c'_u(x)$ for $u\in S_\Delta$ from the repair phase and evaluates the
+other services computes the same top-2, because the top-2 of a set of pairs does not
+depend on the order in which the pairs are inserted.
 \end{proof}
 
 \begin{definition}[Supports]\label{def:supports}
@@ -721,7 +733,8 @@ order and with the edited instance, makes the state of every $x\in X$ equal to
 $\mathrm{Top2}(c'(x))$. Under \ref{as:extrap}, \ref{as:tier} and \ref{as:spacing}, the
 supports of Definition~\ref{def:supports} contain $D_\Delta$. The repair evaluates
 $|S_\Delta|\cdot|U|$ costs and recomputes the set $R\subseteq U$ of parcels that reach a
-recompute branch, at a cost of $|\SC|$ evaluations each. A parcel reaches a recompute branch only if the edited service was its best and became
+recompute branch. With deferred recomputation (Lemma~\ref{lem:compose}), each parcel of
+$R$ is recomputed once per edit, at a cost of $|\SC|-|S_\Delta|$ further evaluations. A parcel reaches a recompute branch only if the edited service was its best and became
 infeasible or lexicographically worse than the runner-up (R1), or was its runner-up and
 became more expensive than before without overtaking the best (R2).
 \end{theorem}
@@ -729,7 +742,7 @@ became more expensive than before without overtaking the best (R2).
 For $x\notin U$, all costs are unchanged, so the old state equals $\mathrm{Top2}(c'(x))$. For
 $x\in U$, apply Lemma~\ref{lem:compose}. The containment of the supports is
 Lemmas~\ref{lem:cellsupport} and~\ref{lem:othersupports}. The cost statement counts one
-evaluation per parcel and service, plus one full recomputation per element of $R$. The
+evaluation per parcel and service, plus one deferred recomputation per element of $R$. The
 characterisation of $R$ follows from (R1) and (R2).
 \end{proof}
 
@@ -866,34 +879,40 @@ cell-probe argument, which we do not claim.
 \appendix
 \section{Correspondence with the Code}\label{app:code}
 
-Line numbers refer to the code as of 2026-11-09, in \code{code/rateq/} unless stated
-otherwise.
+Line numbers refer to the code as of 2026-11-10, after the consistency fixes, in
+\code{code/rateq/} unless stated otherwise.
 
 \begin{longtable}{>{\raggedright\arraybackslash}p{0.34\textwidth}>{\raggedright\arraybackslash}p{0.58\textwidth}}
 \toprule
 Theory & Implementation \\
 \midrule
 \endhead
-Zone map $Z_s$ (Def.~\ref{def:program}(i)) & \code{model.py:151-154} \code{zone\_of}; scalar \code{index.py:78-83} \\
-Billable weight $\tau_\gamma$ & \code{model.py:216-231} \code{billable}; \code{index.py:58-73} \code{billable1} \\
-Group key $\gamma(s)$ & \code{model.py:147-149} \code{group\_key} \\
-Tiers, lower first & \code{model.py:142-145} \code{min\_tiers}, \code{model.py:243-245}, \code{index.py:92-95} \\
-Band $k_s$ with $\epsilon=10^{-9}$ & \code{model.py:255-256}, \code{index.py:103-105} \\
-Extrapolation with cap & \code{model.py:249-263}, \code{index.py:99-112} \\
-Eligibility & \code{model.py:246-248, 254, 264}, \code{index.py:78-114} \\
-Surcharges, keys, maxima & \code{model.py:269-288}; \code{index.py:115-137} \\
-Cost (\ref{eq:cost}) & \code{model.py:289-293}; \code{index.py:138-144} \\
-CFS, brute force & \code{model.py:299-309}, \code{index.py:159-165} \\
-Key partition, signatures & \code{index.py:182-193} \\
-$E_\gamma$, hull $h$, lists & \code{index.py:200, 207-222, 224-244} \\
-TA (Def.~\ref{def:TA}) & \code{index.py:258-299}; stop test \code{index.py:277} \\
-Batch (Prop.~\ref{prop:batch}) & \code{index.py:301-358} \\
-Price and zone edits & \code{index.py:361-393, 407-458} \\
-Class key $\chi$, NF flag & \code{index.py:552-586}; geometric features \code{index.py:461-470} \\
-RQ+ TA & \code{index.py:602-637}, \code{index.py:639-696} \\
-Top-2, repair (R1)--(R4) & \code{maintain.py:21-32, 94-126} \\
-$U_{\mathrm{cell}}$, $U_{\mathrm{srv}}$, $U_{\mathrm{fuel}}$ & \code{maintain.py:64-84, 86-88, 90-92} \\
-$U_{\mathrm{rule}}$ & \code{code/erp\_pilot.py:160, 171-185, 196-204} \\
+Zone map $Z_s$ (Def.~\ref{def:program}(i)) & \code{model.py:157-160} \code{zone\_of}; scalar \code{index.py:78-83} \\
+Billable weight $\tau_\gamma$ & \code{model.py:222-237} \code{billable}; \code{index.py:58-73} \code{billable1} \\
+Group key $\gamma(s)$ & \code{model.py:153-155} \code{group\_key} \\
+Tiers, lower first & \code{model.py:148-151} \code{min\_tiers}, \code{model.py:249-251}, \code{index.py:92-95} \\
+Band $k_s$ with $\epsilon=10^{-9}$ & \code{model.py:261-262}, \code{index.py:103-105} \\
+Extrapolation with cap & \code{model.py:255-269}, \code{index.py:99-112} \\
+Eligibility & \code{model.py:252-254, 260, 270}, \code{index.py:78-114} \\
+Surcharges, keys, maxima & \code{model.py:275-294}; \code{index.py:115-137} \\
+Cost (\ref{eq:cost}) & \code{model.py:295-299}; \code{index.py:138-144} \\
+CFS, brute force & \code{model.py:305-315}, \code{index.py:159-165} \\
+Assumptions A1, A3 (build-time check) & \code{index.py:176-193} \\
+Assumptions A5, A6 (maintenance check) & \code{maintain.py:54-68} \\
+Assumption A7 (\code{das\_ok}) & \code{index.py:510-516} \\
+Key partition, signatures & \code{index.py:203-214} \\
+$E_\gamma$, hull $h$, lists & \code{index.py:221, 228-243, 245-265} \\
+TA (Def.~\ref{def:TA}) & \code{index.py:279-320}; stop test \code{index.py:298} \\
+Batch (Prop.~\ref{prop:batch}) & \code{index.py:322-379} \\
+Price and zone edits & \code{index.py:382-414, 428-472} \\
+Class key $\chi$, NF flag & \code{index.py:581-615}; geometric features \code{index.py:483-493} \\
+RQ+ TA & \code{index.py:631-666}, \code{index.py:668-725} \\
+Top-2, repair (R1)--(R4) & \code{maintain.py:21-40, 151-202} \\
+Deferred recomputation (Lemma~\ref{lem:compose}) & \code{maintain.py:155-202} \code{apply\_many} \\
+$U_{\mathrm{cell}}$ (S1), signature refresh & \code{maintain.py:70-87, 97-122}; \code{index.py:198, 471} \\
+$U_{\mathrm{zone}}$ (S5) & \code{maintain.py:124-130} \\
+$U_{\mathrm{srv}}$ (S3), $U_{\mathrm{fuel}}$ (S6) & \code{maintain.py:132-134, 136-149} \\
+$U_{\mathrm{rule}}$ (S4) & \code{code/erp\_pilot.py:187-201, 213-227} \\
 \bottomrule
 \end{longtable}
 
@@ -906,76 +925,83 @@ $(c',s)\lexlt(c_1,s_1)$ is false for $c'=\infty$, because $c_1$ is finite, and
 $c'\le c_2$ is false as well, so the code recomputes. For other services with $c'=\infty$,
 both tests are false, as in (R4).
 
-\paragraph{Assumption check.} A scan of the compiled instances (the public cards, their
-scaled variants, the synthetic and erp-style generators, and the enterprise US
-instance) found no violation of \ref{as:nonneg}--\ref{as:das}. In detail: no negative price,
-amount, coefficient or fuel ratio; no extrapolating service with $\lambda_s<b_{s,K_s}$; the
-identifier of every service equals its position; no tier predicate reads $T$,
-$\mathit{ZONE}$, $\mathit{ZIP}$ or $\mathit{DAS}$; no tier minimum lies within $\epsilon$
-above a breakpoint; and every group that shares a delivery-area start array also shares
-the level array.
+\paragraph{Assumption check.} A scan of the compiled instances found no violation of
+\ref{as:nonneg}--\ref{as:das}. The instances are the public cards, their scaled variants,
+the synthetic and erp-style generators, and the enterprise US instance. In detail:
+\begin{itemize}[leftmargin=*]
+\item no price, amount, coefficient or fuel ratio is negative;
+\item no extrapolating service has $\lambda_s<b_{s,K_s}$;
+\item the identifier of every service equals its position;
+\item no tier predicate reads $T$, $\mathit{ZONE}$, $\mathit{ZIP}$ or $\mathit{DAS}$;
+\item no tier minimum lies within $\epsilon$ above a breakpoint;
+\item every group that shares a delivery-area start array also shares the level array.
+\end{itemize}
+Since 2026-11-10 the code enforces these assumptions. \ref{as:nonneg} and \ref{as:extrap}
+are asserted when the index is built, and \ref{as:tier} and \ref{as:spacing} when the
+maintainer is constructed. \ref{as:das} is part of the \code{das\_ok} test.
 
-\section{Code--Theory Discrepancies}\label{app:mismatch}
+\section{Code--Theory Discrepancies and Their Resolution}\label{app:mismatch}
 
-None of the following items invalidates a reported result. Each is either a latent
-precondition that holds on all instances, or a superset that affects only efficiency.
+The first version of this document (2026-11-09) listed twelve discrepancies. None of them
+invalidated a reported result: each was either a latent precondition that held on all
+instances, or a superset that affected only efficiency. The code was revised on
+2026-11-10. The status below uses the revised line numbers. \emph{Resolved} means that
+the code now implements the theory exactly. \emph{Enforced} means that the precondition is
+asserted, so a violating instance is rejected. \emph{By design} means that the behaviour is
+correct and accounted for in the theory.
 
+\begingroup\raggedright
 \begin{enumerate}[label=M\arabic*,leftmargin=*]
-\item \textbf{Stop rule and ties} (\code{index.py:277, 622}). The strict test
-$\beta_{\mathrm{head}}>\mathit{best}$ evaluates all services with bound equal to $c^*$. This is
-correct and gives the additive term $\tau(x)$ of Theorem~\ref{thm:T4}(d). The research plan
-claims that every certificate-producing algorithm must evaluate
-$|\{s:\beta_s\le c^*\}|$ services; the correct lower bound is $|M(x)|$, which is smaller by
-$\tau(x)$.
-\item \textbf{One extra interval in $U_{\mathrm{cell}}$} (\code{maintain.py:69}). The condition
-$E_{e-1}<\mathit{hi}+10^{-12}$ admits the interval directly after $b_{s,k}$, so the code
-enumerates $I_k\cup\{e_{\mathit{hi}}+1\}$. This is a sound superset that slightly enlarges
-$U$.
-\item \textbf{Tier band test} (\code{maintain.py:79}) uses $\mathit{lo}<m\le\mathit{hi}$ without
-$\epsilon$. It is equivalent to the $\epsilon$-band membership under the second part of
-\ref{as:tier}.
-\item \textbf{Tier masks} (\code{maintain.py:56-62}) evaluate the tier predicate with the
-pre-tier $T$, with $\mathit{ZONE}=0$, and with a cache keyed by the identity of the
-predicate object, which is shared across services. They are exact only under the first
-part of \ref{as:tier}. A tier predicate that reads $T$, such as an oversize test that
-depends on the raised weight, would require evaluating the masks per service in tier
-order.
-\item \textbf{Stale signatures after zone edits.} The locations are
-\code{maintain.py:40-52} and \code{index.py:407-450}. The maintainer class computes the parcel signatures and
-the buckets only once. After \code{RQIndex.update\_zone}, \code{support\_cell} would read the old
-signatures and could miss parcels whose new zone equals $z$. There is also no Q3 routine
-for zone edits; the theory supplies $U_{\mathrm{zone}}$ (S5). The pilots never interleave
-zone edits with Q3, so their results are unaffected. A fix is to rebuild \code{sg} and the
-buckets of the affected keys after a zone edit.
-\item \textbf{Fuel support at the ends of the schedule.} Location:
-\code{code/pilot.py:239-240} and \code{maintain.py:90-92}. The support $[\sigma_w,\sigma_{w+1}-1]$ is exact for
-$1\le w\le W-2$. For $w=0$ it misses days before $\sigma_0$, which also use $f_{\phi,0}$
-(\code{model.py:172}). For $w=W-1$ it raises an index error. The pilot selects $w=0$ only
-for schedules with at most two segments, and all fuel classes of the instances have more,
-so its results are unaffected.
-\item \textbf{Rule-level support} (\code{code/erp\_pilot.py:160, 171-185}). The features use
-only the upper tier \code{oversize}, not \code{oversize2} and not the tier order, and the
-rule identity \code{rkey} omits the fuel flag. Both are sound on the enterprise data,
-which has no tiers and only rules without fuel, but they violate (S4) in general.
-\item \textbf{Negative amounts} (\code{index.py:131} vs.\ \code{model.py:283}). The scalar
-evaluator initialises group maxima with $-1$, so a group with only negative amounts
-contributes $0$, whereas the vector evaluator contributes the negative maximum. The two
-coincide under \ref{as:nonneg}.
-\item \textbf{Extrapolation limit} (\code{index.py:217-221}). The hull assumes
-\ref{as:extrap}. If $\lambda_s<b_{s,K_s}$, a parcel with $\hat t\in(\lambda_s,b_{s,K_s}]$ has
-$B_s=\lceil P_s[z,K_s]\hat t/b_{s,K_s}\rceil$, which may be below $h$, and Lemma~\ref{lem:L3}
-would fail. A guard that rejects such services at build time is advisable.
-\item \textbf{Shared delivery areas} (\code{index.py:486-487}). The flag \code{das\_ok}
-compares only the identity of the start arrays, not of the level arrays
+\item \textbf{Stop rule and ties}, by design. The locations are \code{index.py:298} and
+\code{index.py:651}. The strict test $\beta_{\mathrm{head}}>\mathit{best}$ evaluates all services
+with bound equal to $c^*$. This yields the additive term $\tau(x)$ of
+Theorem~\ref{thm:T4}(d). The research plan's claim that every certificate-producing
+algorithm evaluates $|\{s:\beta_s\le c^*\}|$ services is corrected: the lower bound is
+$|M(x)|$, which is smaller by $\tau(x)$.
+\item \textbf{Extra interval in $U_{\mathrm{cell}}$}, resolved (\code{maintain.py:101-108}). The
+code now enumerates exactly $I_k=\{e:b_{s,k-1}<E_e\le\bar b\}$. Previously it also
+enumerated the interval directly after $b_{s,k}$.
+\item \textbf{Tier band test without $\epsilon$}, enforced (\code{maintain.py:117}). The test
+is equivalent to $\epsilon$-band membership under the second part of \ref{as:tier}, which
+is now asserted in \code{maintain.py:54-68}.
+\item \textbf{Tier masks}, resolved and enforced (\code{maintain.py:54-68, 89-95}). The first
+part of \ref{as:tier} is asserted, and the masks are evaluated on parcel-level features
+only. Under that assumption, caching them by predicate identity across services is
+exact.
+\item \textbf{Stale signatures after zone edits}, resolved. \code{RQIndex.update\_zone}
+increments a version counter (\code{index.py:198, 471}). \code{support\_cell} rebuilds the
+parcel signatures and buckets when the version has changed
+(\code{maintain.py:70-87, 97-100}). \code{support\_zone} (\code{maintain.py:124-130}) implements
+$U_{\mathrm{zone}}$ of (S5) and must be called before the index edit.
+\item \textbf{Fuel support at the ends of the schedule}, resolved. \code{support\_fuel}
+(\code{maintain.py:136-149}) implements $D_w$ of (S6): segment $0$ extends to $-\infty$ and
+the last segment to $+\infty$. The pilot calls it in \code{code/pilot.py:255-262}.
+\item \textbf{Rule-level support}, resolved and enforced. The tiers are now applied in
+tier order (\code{code/erp\_pilot.py:222-223}). The rule identity includes the fuel flag
+(\code{code/erp\_pilot.py:187}). A replayed event is asserted to be a rule edit in the sense
+of (S4), with zones, prices, group and tiers unchanged (\code{code/erp\_pilot.py:190-201}).
+\item \textbf{Negative amounts}, enforced (\code{index.py:176-193}). \ref{as:nonneg} is
+asserted at build time. Under it, the scalar evaluator (\code{index.py:131}) and the
+vector evaluator (\code{model.py:289}) coincide.
+\item \textbf{Extrapolation limit}, enforced (\code{index.py:176-193}). \ref{as:extrap} is
+asserted at build time.
+\item \textbf{Shared delivery areas}, resolved (\code{index.py:510-516}). The flag
+\code{das\_ok} now requires the same start arrays and equal level arrays
 (\ref{as:das}).
-\item \textbf{RQ+ with truncation} (\code{index.py:502-503}). The unsorted hull is recovered
-from the possibly truncated lists, so RQ+ requires \code{kappa=None}, which is the default.
-\item \textbf{Documentation} (\code{model.py:9-12}, \code{index.py:474-476}). The docstrings
-claim upward-closed predicates and monotone cost, and list only $L,M,S,G,V,A$ as
-geometric features, whereas \code{GEOM} also contains $\mathit{res}$, $L+M+S$, day and
-month. The proofs use neither monotonicity nor the shorter list, so only the
-documentation is outdated.
+\item \textbf{RQ+ with truncation}, by design (\code{index.py:526-532}). The unsorted hull
+is recovered from the lists, so RQ+ requires \code{kappa=None}, which is the default.
+\item \textbf{Documentation}, resolved (\code{model.py:1-20} and the docstring of
+\code{RQIndexPlus}, \code{index.py:495}). The documentation now matches the theory: no
+monotonicity is assumed, and the full list of geometric features is given.
 \end{enumerate}
+\endgroup
+
+\paragraph{Merged fuel-class update.} \code{Maintainer.apply\_many}
+(\code{maintain.py:155-202}) implements the deferred recomputation of
+Lemma~\ref{lem:compose}. It applies the repairs (R1)--(R4) once per service of the edited
+class on a common support and marks the parcels that reach a recompute branch. It then
+recomputes each marked parcel once and reuses the new costs of the edited services. The
+single-service \code{apply} is \code{apply\_many} with one service.
 
 \begin{thebibliography}{9}
 \bibitem{fagin2003optimal}

@@ -2,27 +2,27 @@
 \begin{table*}[t]
 \centering\footnotesize
 \setlength{\tabcolsep}{3.1pt}
-\caption{Q1 single-query latency (p50 over 1{,}000 parcels, $\mu$s) and Q2 batch time (s, 100{,}000 parcels). Every method returns the brute-force answer for every parcel. Evals: exact service evaluations per parcel (RQ-Index/\rqp). $\times$: best RQ variant over B1 (Q1) and over B1-vec (Q2). DB-1/DB-8: DuckDB with 1/8 threads; \rqp-c/-w: cold/warm row cache. Best time per row in bold; --- : not run.}
+\caption{Q1 single-query latency (p50 over 1{,}000 parcels, $\mu$s) and Q2 batch time (s, 100{,}000 parcels). Every method returns the brute-force answer for every parcel. Evals: exact service evaluations per parcel (RQ-Index/\rqp). $\times$: best RQ variant over B1 (Q1) and over B1-vec (Q2). DB-1/DB-8: DuckDB with 1/8 threads; \rqp-c/-w: cold/warm row cache; --- : not run. Best in bold, second best underlined: a RateQ variant is best in 10 of 10 (Q1) and 10 of 10 (Q2) rows.}
 \label{tab:q12}
 \begin{tabular}{@{}llrrrrrrrr|rrrrrrrr@{}}
 \toprule
 & & & \multicolumn{7}{c|}{Q1 single query ($\mu$s)} & \multicolumn{8}{c}{Q2 batch (s)}\\
 Instance & $n$ & Load & B1 & B4 & B3 & RQ & \rqp & Evals & $\times$ & B1-vec & DB-1 & DB-8 & B5 & RQ & \rqp-c & \rqp-w & $\times$\\
 \midrule
-PUB2 & 19 & olist & 123 & 16.2 & 58.7 & \textbf{10.2} & 61.6 & 1.2/1.0 & \textbf{12.0} & 0.41 & 4.84 & 2.56 & 0.61 & \textbf{0.06} & 0.83 & 0.55 & \textbf{7.0}\\
- &  & furn & 120 & 34.7 & 138 & \textbf{13.1} & 62.1 & 1.9/0.8 & \textbf{9.2} & 0.42 & 5.07 & 2.75 & 1.43 & \textbf{0.08} & 1.83 & 0.81 & \textbf{5.0}\\
+PUB2 & 19 & olist & 338 & \underline{45.1} & 173 & \textbf{32.1} & 140 & 1.2/1.0 & 10.5 & \underline{0.77} & 10.8 & 5.21 & 1.66 & \textbf{0.10} & 1.97 & 1.20 & 7.7\\
+ &  & furn & 336 & \underline{110} & 382 & \textbf{43.9} & 140 & 1.9/0.8 & 7.6 & \underline{0.85} & 11.0 & 5.37 & 4.09 & \textbf{0.17} & 5.01 & 1.96 & 4.9\\
 \midrule
-PUB2x60 & 60 & olist & 406 & 43.3 & 138 & \textbf{10.4} & 63.1 & 1.5/1.0 & \textbf{39.1} & 1.24 & 40.5 & 34.5 & 1.21 & \textbf{0.07} & 0.86 & 0.55 & \textbf{17.7}\\
- &  & furn & 385 & 102 & 260 & \textbf{28.3} & 64.0 & 4.1/0.9 & \textbf{13.6} & 1.33 & 20.8 & 18.4 & 3.61 & \textbf{0.18} & 1.93 & 0.91 & \textbf{7.2}\\
+PUB2x60 & 60 & olist & 1{,}066 & \underline{96.4} & 406 & \textbf{31.9} & 141 & 1.5/1.0 & 33.4 & 2.46 & 36.9 & 16.8 & 3.37 & \textbf{0.13} & 2.05 & \underline{1.21} & 18.7\\
+ &  & furn & 1{,}041 & 297 & 724 & \textbf{62.4} & \underline{142} & 4.1/0.9 & 16.7 & 2.61 & 34.6 & 13.0 & 10.2 & \textbf{0.37} & 5.28 & \underline{2.01} & 7.0\\
 \midrule
-PUB2x240 & 240 & olist & 1{,}602 & 121 & --- & \textbf{10.1} & 64.7 & 3.0/1.0 & \textbf{159} & 4.70 & 204 & 312 & 3.87 & \textbf{0.16} & 0.94 & 0.58 & \textbf{29.2}\\
- &  & furn & 1{,}573 & 377 & --- & \textbf{45.0} & 65.6 & 13.5/0.9 & \textbf{35.0} & 6.14 & 201 & 312 & 11.5 & \textbf{0.67} & 2.26 & 0.90 & \textbf{9.1}\\
+PUB2x240 & 240 & olist & 4{,}144 & 288 & --- & \textbf{32.3} & \underline{139} & 3.0/1.0 & 128 & 9.79 & 176 & 85.3 & 10.4 & \textbf{0.36} & 2.25 & \underline{1.27} & 27.1\\
+ &  & furn & 3{,}934 & 993 & --- & \underline{148} & \textbf{139} & 13.5/0.9 & 28.2 & 10.5 & 160 & 66.7 & 32.3 & \textbf{1.62} & 6.43 & \underline{2.20} & 6.5\\
 \midrule
-PUB2x1000 & 1000 & olist & 8{,}669 & 816 & --- & \textbf{10.8} & 64.5 & 8.2/1.0 & \textbf{800} & 19.1 & 652 & 805 & 14.6 & 0.88 & 1.30 & \textbf{0.64} & \textbf{29.6}\\
- &  & furn & 10{,}294 & 2{,}331 & --- & 153 & \textbf{64.9} & 54.6/0.9 & \textbf{159} & 20.1 & 995 & 1{,}044 & 47.5 & 4.07 & 3.52 & \textbf{1.23} & \textbf{16.4}\\
+PUB2x1000 & 1000 & olist & 18{,}728 & 1{,}180 & --- & \textbf{34.9} & \underline{138} & 8.2/1.0 & 537 & 39.4 & 888 & 592 & 40.0 & \underline{2.43} & 2.90 & \textbf{1.43} & 27.6\\
+ &  & furn & 18{,}021 & 4{,}494 & --- & \underline{380} & \textbf{142} & 54.6/0.9 & 127 & 42.2 & 804 & 626 & 133 & 10.6 & \underline{10.4} & \textbf{2.84} & 14.8\\
 \midrule
-SYN200 & 200 & olist & 877 & 205 & --- & \textbf{30.4} & 244 & 1.8/2.8 & \textbf{28.9} & 2.87 & 114 & 131 & 12.3 & \textbf{0.25} & 10.9 & 6.52 & \textbf{11.7}\\
- &  & furn & 847 & 240 & --- & \textbf{50.5} & 252 & 8.2/1.9 & \textbf{16.8} & 2.97 & 63.3 & 48.3 & 43.8 & \textbf{0.48} & 28.3 & 23.1 & \textbf{6.2}\\
+SYN200 & 200 & olist & 2{,}857 & \underline{443} & --- & \textbf{67.5} & 476 & 1.8/2.8 & 42.3 & \underline{6.67} & 83.8 & 42.6 & 33.2 & \textbf{0.51} & 30.0 & 17.6 & 13.0\\
+ &  & furn & 2{,}733 & 610 & --- & \textbf{140} & \underline{476} & 8.2/1.9 & 19.6 & \underline{7.08} & 72.2 & 36.7 & 125 & \textbf{0.97} & 74.6 & 64.2 & 7.3\\
 \bottomrule
 \end{tabular}
 \end{table*}

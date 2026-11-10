@@ -13,7 +13,7 @@ if [ -z "$PY" ]; then
   if [ -x "$ROOT/.venv/bin/python" ]; then PY="$ROOT/.venv/bin/python"; else PY="$(command -v python3)"; fi
 fi
 TMP="$(mktemp -d "${TMPDIR:-/tmp}/rateq_check.XXXXXX")"
-trap 'rm -rf "$TMP"' EXIT
+[ -n "${KEEP_TMP:-}" ] || trap 'rm -rf "$TMP"' EXIT  # KEEP_TMP=1 keeps the work directory
 cp -R "$ROOT/code" "$ROOT/data" "$ROOT/results" "$TMP/"
 mkdir -p "$TMP/paper"
 export MPLBACKEND=Agg

@@ -26,6 +26,7 @@ the paper.
 | `code/rateq/` | Python package: `model.py` (rule model, exact evaluation, vectorised brute force), `index.py` (RQ-Index, RQ+), `maintain.py` (Q3 maintenance), `baselines.py` (B1-B6), `instances.py` (instance and workload builders) |
 | `code/pilot.py` | Python experiments E1 (Q1), E2 (Q2), E3 (memory, build), E4 (index updates), E5 (Q3) |
 | `code/exp_rev1_*.py` | Additional experiments: bound and top-k ablations, B7 result cache, B8 all-candidates IVM, generator sensitivity, Q3 at 2M/20M stored parcels, ent-geo workload |
+| `code/exp_rev2_*.py` | Round-2 experiments: Table `tab:q12` rerun with five interleaved repetitions (`exp_rev2_pilot_reps.py`), local rule-edit stream (`exp_rev2_rule_stream.py`), what-if contract evaluation (`exp_rev2_whatif.py`); fields in `results/rev2/README.md` |
 | `code/export_bin.py`, `code/run_cpp.py` | Export instances, workloads and Python ground truth to binary files; drive the C++ verification and timing |
 | `code/make_numbers.py`, `code/make_figs.py` | Generate `paper/numbers.tex`, `paper/tables/*.tex` and `paper/figs/*.pdf` from `results/` |
 | `code/make_cpp_tables.py`, `code/make_tables.py` | Markdown summaries of the C++ and Python results |
@@ -85,7 +86,7 @@ script, the figures by `code/make_figs.py`.
 | Fig. `fig:example` (Introduction): exact charge vs. weight, official 2026 data | `paper/figs/example.pdf` | none; computed from `data/public/` (facts in `fig_example_facts.json`) | `make_figs.py` |
 | Table `tab:data` (Setup): instances and index structure | `paper/tables/datasets.tex` | `pilot_E3_pub2.json`, `pilot_E3.json`, `erp_pilot_USA.json` | `pilot.py E3`; enterprise run |
 | Table `tab:cpp` (RQ1, RQ2): compiled comparison | `paper/tables/cpp.tex` | `cpp_E1E2_pub2_server.json`, `cpp_E1E2_pub2r_server.json`, `cpp_E1E2_erp.json`, `cpp_verify_pub2.json`, `cpp_verify_pub2r.json`, `cpp_verify_erp.json` | `run_cpp.py verify/time` |
-| Table `tab:q12` (RQ1, RQ2): Python Q1 latency and Q2 batch time | `paper/tables/q12.tex` | `pilot_E1_pub2.json`, `pilot_E2_pub2.json` (or `*_server.json` copies when present), `pilot_E1.json`, `pilot_E2_tuned.json` | `pilot.py E1 E2` |
+| Table `tab:q12` (RQ1, RQ2): Python Q1 latency and Q2 batch time | `paper/tables/q12.tex` | `pilot_E1_pub2_server.json`, `pilot_E2_pub2_server.json`, `pilot_E1_syn_server.json`, `pilot_E2_syn_server.json` (Xeon, one pinned core, median of five interleaved repetitions; the single-run `pilot_E1_pub2.json`, `pilot_E2_pub2.json`, `pilot_E1.json`, `pilot_E2_tuned.json` are used when these are absent, and `pilot_E2_pub2.json` gives the ASOF-vs-BETWEEN ratio of DuckDB) | `exp_rev2_pilot_reps.py` (wraps `pilot.py E1 E2`) |
 | Table `tab:q3` and Fig. `fig:q3` (RQ3): Q3 maintenance | `paper/tables/q3.tex`, `paper/figs/q3_maint.pdf` | `pilot_E5_pub2.json` | `pilot.py E5` |
 | Table `tab:scale` (RQ3): Q3 at 2M and 20M stored parcels | `paper/tables/scale.tex` | `rev1/server/scale_q3_*.json` | `exp_rev1_scale.py` |
 | Fig. `fig:erp` (RQ3): logged enterprise rule changes | `paper/figs/erp_replay.pdf` | `erp_pilot_USA.json` | enterprise run |
@@ -96,8 +97,10 @@ script, the figures by `code/make_figs.py`.
 | Text macros: lower-bound and top-k ablations | `paper/numbers.tex` | `rev1/server/ablation_bound_*.json`, `rev1/server/ablation_topk_v2.json` | `exp_rev1_ablations.py` |
 | Text macros: generator sensitivity | `paper/numbers.tex` | `rev1/server/sensitivity_*.json` | `exp_rev1_sensitivity.py` |
 | Text macros: ent-geo workload | `paper/numbers.tex` | `rev1/entgeo_E1E2_*.json`, `rev1/entgeo_workload_stats.json` | `exp_rev1_entgeo.py` (needs enterprise shapes) |
+| Text macros: public local rule-edit stream (RQ3) | `paper/numbers.tex` | `rev2/rule_stream_PUB2*.json` | `exp_rev2_rule_stream.py` |
 | Text macros: adaptive-rule sensitivity to theta | `paper/numbers.tex` | `erp_pilot_USA.json` (writes `theta_sweep_erp.json`) | `make_numbers.py` |
 | Not in the current paper: Q1 and Q2 plots, separate Q1 and Q2 tables | `paper/figs/q1_latency.pdf`, `paper/figs/q2_batch.pdf`, `paper/tables/q1.tex`, `paper/tables/q2.tex` | `pilot_E1_pub2.json`, `pilot_E2_pub2.json` | `pilot.py E1 E2` |
+| Not in the current paper: what-if evaluation of 100 rewritten contracts over 2M stored parcels | none | `rev2/whatif_19.json`, `rev2/whatif_60.json` | `exp_rev2_whatif.py` |
 
 `make_numbers.py` selects some inputs by rule (for example, a server rerun before the original run,
 or an earlier enterprise run in `results/archive_1109_prefix/` when the latest one recorded a machine
@@ -122,6 +125,7 @@ used an Intel Xeon Platinum 8336C, one pinned core per process.
 | Python E1-E3, synthetic generators | `scripts/reproduce.sh synthetic` | `results/pilot_E1.json`, `pilot_E2_tuned.json`, `pilot_E3.json` | about 1 h (M4) |
 | C++ export, verify, time | `scripts/reproduce.sh cpp` | `results/cpp_verify_pub2*.json`, `results/cpp_E1E2_pub2*.json`, `results/tables_cpp.md` | export 30 min; verify 65 min (PUB2 1 min, x60 3 min, x240 8 min, x1000 53 min); timing 35 min (Xeon) |
 | Additional experiments | `scripts/reproduce.sh rev1` | `results/rev1/*.json`, copied to `results/rev1/server/` | bound ablation 11 min, top-k 12 min, B7 15 min, B8 25 min, sensitivity 65 min, 2M scale 70 min, 20M scale 67 min (Xeon, run in parallel on separate cores) |
+| Round-2 experiments | from `code/`: `python exp_rev2_pilot_reps.py`, `python exp_rev2_rule_stream.py`, `python exp_rev2_whatif.py` (usage in each docstring) | `results/pilot_E{1,2}_{pub2,syn}_server.json`, `results/rev2/*.json` | Table rerun: dominated by DuckDB, 10-15 min per DuckDB run at n=1000 (Xeon, one core per process); rule-edit stream about 1.5 h for five replays; what-if about 0.5 h at n=19 and 1.5 h at n=60 (M4) |
 | Paper outputs | `scripts/reproduce.sh numbers` | `paper/numbers.tex`, `paper/tables/`, `paper/figs/` | 1 min |
 
 `scripts/reproduce.sh` prints each command it runs; the commands can also be run one by one from
@@ -206,7 +210,7 @@ paper with `scripts/check_numbers.sh`; the enterprise experiments themselves can
 this repository. The code-to-theorem map in `theory/rateq_theory.pdf` cites lines of the enterprise driver
 `code/erp_pilot.py`, which is not shipped because it reads the company data. Six aggregate statistics of the company's 2026 shipment table (parcel count,
 warehouses, services per warehouse) are constants in `code/make_numbers.py`, and
-`results/warehouse_us_channels.json` holds the same statistics restricted to US destinations.
+`results/warehouse_us_channels.json` holds the same statistics restricted to US destinations; `results/warehouse_us_cards.json` holds four aggregates of the US warehouses (warehouse count, share of parcels on channels priced by the published cards, median and maximum channels with at least 1% of a warehouse's parcels).
 
 ## Licence
 

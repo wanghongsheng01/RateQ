@@ -27,10 +27,12 @@ CODE = ["rateq/__init__.py", "rateq/baselines.py", "rateq/index.py", "rateq/inst
         "make_numbers.py", "make_figs.py", "make_tables.py", "make_cpp_tables.py", "run_cpp.py", "export_bin.py",
         "parse_public.py", "parse_manual.py", "pilot.py", "smoke.py",
         "exp_rev1_common.py", "exp_rev1_ablations.py", "exp_rev1_b7_cache.py", "exp_rev1_b8_ivm.py",
-        "exp_rev1_scale.py", "exp_rev1_sensitivity.py", "exp_rev1_entgeo.py"]
+        "exp_rev1_scale.py", "exp_rev1_sensitivity.py", "exp_rev1_entgeo.py",
+        "exp_rev2_pilot_reps.py", "exp_rev2_rule_stream.py", "exp_rev2_whatif.py"]
 CPP = ["rq.cpp", "Makefile"]
 RESULTS = (["pilot_E%d_pub2.json" % i for i in range(1, 6)]
            + ["pilot_E1.json", "pilot_E2_tuned.json", "pilot_E3.json",
+              "pilot_E1_pub2_server.json", "pilot_E2_pub2_server.json", "pilot_E1_syn_server.json", "pilot_E2_syn_server.json",
               "cpp_E1E2_pub2.json", "cpp_E1E2_pub2r.json", "cpp_E1E2_pub2_server.json", "cpp_E1E2_pub2r_server.json",
               "cpp_verify_pub2.json", "cpp_verify_pub2r.json",
               # aggregate-only enterprise results
@@ -45,6 +47,15 @@ def rev1_files():
     # enterprise-shape (ent-geo) aggregates; the shapes themselves stay private
     out += sorted(os.path.relpath(p, os.path.join(PROJ, "results"))
                   for p in glob.glob(os.path.join(PROJ, "results", "rev1", "*entgeo*.json")) if "_test" not in p)
+    return out
+
+
+def rev2_files():
+    # round-2 public-data experiments: Table III reruns (above), rule-edit stream and what-if contracts
+    out = ["rev2/README_artifact.md"]
+    out += sorted(os.path.relpath(p, os.path.join(PROJ, "results"))
+                  for pat in ("rule_stream_*.json", "whatif_*.json")
+                  for p in glob.glob(os.path.join(PROJ, "results", "rev2", pat)))
     return out
 
 
@@ -153,7 +164,7 @@ def main():
     for p in sorted(glob.glob(os.path.join(PROJ, "data", "public", "*.json"))):
         copy_bytes(p, os.path.join(ART, "data", "public", os.path.basename(p)))
     # results
-    files = list(dict.fromkeys(RESULTS + rev1_files() + TRACED))
+    files = list(dict.fromkeys(RESULTS + rev1_files() + rev2_files() + TRACED))
     bad = [f for f in files if f.startswith(("_private", "bin", "logs")) or "/_private" in f]
     if bad:
         sys.exit("refusing to ship private or binary inputs: %s" % bad)
@@ -173,7 +184,7 @@ def main():
             loaded[f] = (open(src, encoding="utf-8").read(), None)
     tmap = {t: RULES["template_id_new"] % (i + 1) for i, t in enumerate(sorted(tpl))}
     for f, (txt, obj) in loaded.items():
-        dst = os.path.join(ART, "results", f)
+        dst = os.path.join(ART, "results", f.replace("README_artifact.md", "README.md"))
         ensure_dir(dst)
         if obj is None:
             t = fix_text(txt)

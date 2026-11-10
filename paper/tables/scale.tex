@@ -2,17 +2,17 @@
 \begin{table}[t]
 \centering\footnotesize
 \setlength{\tabcolsep}{1.9pt}
-\caption{Q3 on 2M and 20M stored parcels (server, CPU time, median over repetitions): full recomputation, and time per edit of service-level maintenance (Svc; re-evaluation only, a lower bound on its cost) and of \sys. Every maintained state equals a full recomputation.}
+\caption{Q3 on 2M and 20M stored parcels (server, CPU time, median over repetitions): full recomputation, and time per edit of service-level maintenance (Svc; re-evaluation only, a lower bound on its cost) and of \sys. Every maintained state equals a full recomputation. Best per edit type in bold, second underlined: \sys is best in 12 of 12 comparisons.}
 \label{tab:scale}
 \begin{tabular}{@{}rrrrrrrrr@{}}
 \toprule
 & & Full & \multicolumn{2}{c}{Cell edit} & \multicolumn{2}{c}{Band edit} & \multicolumn{2}{c}{Fuel edit}\\
 $|X|$ & $n$ & (s) & Svc (s) & \sys (ms) & Svc (s) & \sys (ms) & Svc (s) & \sys (s)\\
 \midrule
-2M & 19 & 27.6 & 1.77 & 2.8 & 1.75 & 16.3 & 2.0 & 0.18\\
-2M & 60 & 76.3 & 1.70 & 4.1 & 1.48 & 17.8 & 7.5 & 0.38\\
-2M & 240 & 260 & 1.24 & 1.2 & 1.20 & 5.4 & 18.5 & 1.27\\
-20M & 19 & 205 & 13.59 & 13.2 & 13.58 & 115 & 15.5 & 1.26\\
+2M & 19 & 27.6 & \underline{1.77} & \textbf{2.8} & \underline{1.75} & \textbf{16.3} & \underline{2.0} & \textbf{0.18}\\
+2M & 60 & 76.3 & \underline{1.70} & \textbf{4.1} & \underline{1.48} & \textbf{17.8} & \underline{7.5} & \textbf{0.38}\\
+2M & 240 & 260 & \underline{1.24} & \textbf{1.2} & \underline{1.20} & \textbf{5.4} & \underline{18.5} & \textbf{1.27}\\
+20M & 19 & 205 & \underline{13.59} & \textbf{13.2} & \underline{13.58} & \textbf{115} & \underline{15.5} & \textbf{1.26}\\
 \bottomrule
 \end{tabular}
 \end{table}

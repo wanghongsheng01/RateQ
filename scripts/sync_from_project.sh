@@ -32,7 +32,7 @@ sed 's/^/   read: /' "$TR/traced.txt"
 
 echo "== 1/4 copy and de-identify ($PROJ -> $ART)"
 python3 "$ART/scripts/sync_deid.py" "$PROJ" "$ART" "$TR/traced.txt"
-rm -rf "$TR"
+echo "   (trace copy kept in $TR)"
 
 echo "== 2/4 theory PDF"
 for d in "$HOME/Library/TinyTeX/bin/universal-darwin" "$HOME/.TinyTeX/bin/x86_64-linux" /Library/TeX/texbin; do
@@ -49,7 +49,6 @@ if command -v pdflatex > /dev/null; then
   else
     echo "WARNING: pdflatex failed; theory/rateq_theory.pdf not updated" >&2
   fi
-  rm -rf "$T"
 else
   echo "WARNING: pdflatex not found; theory/rateq_theory.pdf not updated" >&2
 fi
